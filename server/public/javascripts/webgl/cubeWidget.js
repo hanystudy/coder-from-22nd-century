@@ -15,7 +15,7 @@ export default class CubeWidget extends Widget {
   }
 
   render = () => {
-    this.cube.rotation.x += 0.1;
-		this.cube.rotation.y += 0.1;
+    this.cube.rotation.x += 0.01;
+		this.cube.rotation.y += 0.05;
   }
 }

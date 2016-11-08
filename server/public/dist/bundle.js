@@ -50,7 +50,11 @@
 
 	var _remoteVideo2 = _interopRequireDefault(_remoteVideo);
 
-	var _cubeWidget = __webpack_require__(2);
+	var _widget = __webpack_require__(2);
+
+	var _widget2 = _interopRequireDefault(_widget);
+
+	var _cubeWidget = __webpack_require__(4);
 
 	var _cubeWidget2 = _interopRequireDefault(_cubeWidget);
 
@@ -60,7 +64,9 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var cubeWidget = new _cubeWidget2.default();
+	// let widget = new Widget()
+
+	// let cubeWidget = new CubeWidget()
 	var videoWidget = new _videoWidget2.default(_remoteVideo2.default);
 
 /***/ },
@@ -110,58 +116,7 @@
 	  value: true
 	});
 
-	var _widget = __webpack_require__(3);
-
-	var _widget2 = _interopRequireDefault(_widget);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var CubeWidget = function (_Widget) {
-	  _inherits(CubeWidget, _Widget);
-
-	  function CubeWidget() {
-	    _classCallCheck(this, CubeWidget);
-
-	    var _this = _possibleConstructorReturn(this, (CubeWidget.__proto__ || Object.getPrototypeOf(CubeWidget)).call(this));
-
-	    _this.createCube = function () {
-	      var geometry = new THREE.BoxGeometry(1, 1, 1);
-	      var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-	      return new THREE.Mesh(geometry, material);
-	    };
-
-	    _this.render = function () {
-	      _this.cube.rotation.x += 0.1;
-	      _this.cube.rotation.y += 0.1;
-	    };
-
-	    _this.cube = _this.createCube();
-	    _this.scene.add(_this.cube);
-	    return _this;
-	  }
-
-	  return CubeWidget;
-	}(_widget2.default);
-
-	exports.default = CubeWidget;
-
-/***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _detector = __webpack_require__(4);
+	var _detector = __webpack_require__(3);
 
 	var _detector2 = _interopRequireDefault(_detector);
 
@@ -174,57 +129,33 @@
 	var VIEW_ANGLE = 45,
 	    ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT,
 	    NEAR = 0.1,
-	    FAR = 20000;
+	    FAR = 10000;
 
 	var Widget = function Widget() {
 	  var _this = this;
 
 	  _classCallCheck(this, Widget);
 
-	  this.initCamera = function () {
-	    var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-	    camera.position.set(0, 0, 10);
-	    return camera;
-	  };
-
-	  this.initScene = function () {
-	    // SCENE
-	    var scene = new THREE.Scene();
-
-	    // LIGHT
-	    var light = new THREE.PointLight(0xffffff);
-	    light.position.set(0, 250, 0);
-	    scene.add(light);
-
-	    // FLOOR
-	    var floorTexture = new THREE.ImageUtils.loadTexture('images/checkerboard.jpg');
-	    floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-	    floorTexture.repeat.set(10, 10);
-	    var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
-	    var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
-	    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-	    floor.position.y = -0.5;
-	    floor.rotation.x = Math.PI / 2;
-	    scene.add(floor);
-
-	    // SKYBOX/FOG
-	    var skyBoxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
-	    var skyBoxMaterial = new THREE.MeshBasicMaterial({ color: 0x9999ff, side: THREE.BackSide });
-	    var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
-	    // scene.add(skyBox);
-	    scene.fog = new THREE.FogExp2(0x9999ff, 0.00025);
-	    return scene;
+	  this.init = function () {
+	    _this.camera.position.set(0, 0, 2);
+	    _this.scene.add(_this.camera);
+	    _this.camera.lookAt(_this.scene.position);
 	  };
 
 	  this.initRenderer = function () {
 	    var renderer = null;
 	    if (_detector2.default.webgl) renderer = new THREE.WebGLRenderer({ antialias: true });else renderer = new THREE.CanvasRenderer();
+
 	    renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	    var container = document.getElementById('ThreeJS');
 	    container.appendChild(renderer.domElement);
 
 	    return renderer;
+	  };
+
+	  this.resizeWidget = function (width, height) {
+	    _this.renderer.setSize(width, height);
 	  };
 
 	  this.animate = function () {
@@ -238,13 +169,12 @@
 
 	  this.update = function () {};
 
-	  this.camera = this.initCamera();
-	  this.scene = this.initScene();
-
-	  this.scene.add(this.camera);
-	  this.camera.lookAt(this.scene.position);
-
 	  this.renderer = this.initRenderer();
+
+	  this.camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+	  this.scene = new THREE.Scene();
+
+	  this.init();
 
 	  this.animate();
 	};
@@ -252,7 +182,7 @@
 	exports.default = Widget;
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -315,6 +245,57 @@
 	exports.default = Detector;
 
 /***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _widget = __webpack_require__(2);
+
+	var _widget2 = _interopRequireDefault(_widget);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var CubeWidget = function (_Widget) {
+	  _inherits(CubeWidget, _Widget);
+
+	  function CubeWidget() {
+	    _classCallCheck(this, CubeWidget);
+
+	    var _this = _possibleConstructorReturn(this, (CubeWidget.__proto__ || Object.getPrototypeOf(CubeWidget)).call(this));
+
+	    _this.createCube = function () {
+	      var geometry = new THREE.BoxGeometry(1, 1, 1);
+	      var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+	      return new THREE.Mesh(geometry, material);
+	    };
+
+	    _this.render = function () {
+	      _this.cube.rotation.x += 0.01;
+	      _this.cube.rotation.y += 0.05;
+	    };
+
+	    _this.cube = _this.createCube();
+	    _this.scene.add(_this.cube);
+	    return _this;
+	  }
+
+	  return CubeWidget;
+	}(_widget2.default);
+
+	exports.default = CubeWidget;
+
+/***/ },
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -324,7 +305,7 @@
 	  value: true
 	});
 
-	var _widget = __webpack_require__(3);
+	var _widget = __webpack_require__(2);
 
 	var _widget2 = _interopRequireDefault(_widget);
 
@@ -342,12 +323,14 @@
 	  function VideoWidget(video) {
 	    _classCallCheck(this, VideoWidget);
 
-	    // create the video element
-	    //video = document.createElement( 'video' );
 	    var _this = _possibleConstructorReturn(this, (VideoWidget.__proto__ || Object.getPrototypeOf(VideoWidget)).call(this));
 
 	    _initialiseProps.call(_this);
 
+	    _this.scene = _this.initScene();
+
+	    // create the video element
+	    //video = document.createElement( 'video' );
 	    _this.video = video;
 	    // video.id = 'video';
 	    // video.type = ' video/ogg; codecs="theora, vorbis" ';
@@ -364,6 +347,7 @@
 
 	    _this.camera.position.set(0, 150, 300);
 	    _this.camera.lookAt(movieScreen.position);
+	    _this.scene.add(_this.camera);
 	    return _this;
 	  }
 
@@ -372,6 +356,35 @@
 
 	var _initialiseProps = function _initialiseProps() {
 	  var _this2 = this;
+
+	  this.initScene = function () {
+	    // SCENE
+	    var scene = new THREE.Scene();
+
+	    // LIGHT
+	    var light = new THREE.PointLight(0xffffff);
+	    light.position.set(0, 250, 0);
+	    scene.add(light);
+
+	    // FLOOR
+	    var floorTexture = new THREE.ImageUtils.loadTexture('images/checkerboard.jpg');
+	    floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+	    floorTexture.repeat.set(10, 10);
+	    var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
+	    var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
+	    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+	    floor.position.y = -0.5;
+	    floor.rotation.x = Math.PI / 2;
+	    scene.add(floor);
+
+	    // SKYBOX/FOG
+	    var skyBoxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
+	    var skyBoxMaterial = new THREE.MeshBasicMaterial({ color: 0x9999ff, side: THREE.BackSide });
+	    var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+	    // scene.add(skyBox);
+	    scene.fog = new THREE.FogExp2(0x9999ff, 0.00025);
+	    return scene;
+	  };
 
 	  this.initVideoContext = function () {
 	    var videoImage = document.createElement('canvas');
@@ -400,7 +413,7 @@
 
 	  this.render = function () {
 	    if (_this2.video.readyState === _this2.video.HAVE_ENOUGH_DATA) {
-	      _this2.videoImageContext.drawImage(video, 0, 0);
+	      _this2.videoImageContext.drawImage(_this2.video, 0, 0);
 	      if (_this2.videoTexture) _this2.videoTexture.needsUpdate = true;
 	    }
 	  };
