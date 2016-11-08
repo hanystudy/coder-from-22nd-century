@@ -6,7 +6,7 @@ function onCreateAnswerSuccess(desc) {
   socket.emit('answer', desc)
 }
 
-var remoteVideo = document.getElementById('remoteVideo');
+let remoteVideo = document.getElementById('remoteVideo');
 
 function gotRemoteStream(e) {
   remoteVideo.srcObject = e.stream;
@@ -26,3 +26,5 @@ socket.on('emitOffer', function (data) {
     null
   );
 });
+
+export default remoteVideo
