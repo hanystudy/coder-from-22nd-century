@@ -1,3 +1,3 @@
 let io = require('socket.io-client')
 
-export let socket = io('http://localhost:5000')
+export let socket = io('http://localhost:8301')

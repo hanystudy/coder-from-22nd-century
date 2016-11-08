@@ -21192,7 +21192,7 @@
 
 	var _window2 = _interopRequireDefault(_window);
 
-	var _socketio = __webpack_require__(246);
+	var _socketio = __webpack_require__(173);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21202,7 +21202,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _require = __webpack_require__(173),
+	var _require = __webpack_require__(246),
 	    desktopCapturer = _require.desktopCapturer;
 
 	var WindowContainer = function (_React$Component) {
@@ -21385,9 +21385,16 @@
 
 /***/ },
 /* 173 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = require("electron");
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var io = __webpack_require__(174);
+
+	var socket = exports.socket = io('http://localhost:8301');
 
 /***/ },
 /* 174 */
@@ -33049,16 +33056,9 @@
 
 /***/ },
 /* 246 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var io = __webpack_require__(174);
-
-	var socket = exports.socket = io('http://localhost:5000');
+	module.exports = require("electron");
 
 /***/ }
 /******/ ]);
