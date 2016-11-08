@@ -42,6 +42,15 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	__webpack_require__(1);
+	__webpack_require__(2);
+
+/***/ },
+/* 1 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -50,27 +59,33 @@
 	var socket = io(location.origin);
 
 	function onCreateAnswerSuccess(desc) {
-		pc2.setLocalDescription(desc);
-		socket.emit('answer', desc);
+	  pc2.setLocalDescription(desc);
+	  socket.emit('answer', desc);
 	}
 
 	var remoteVideo = document.getElementById('remoteVideo');
 
 	function gotRemoteStream(e) {
-		remoteVideo.srcObject = e.stream;
+	  remoteVideo.srcObject = e.stream;
 	}
 
 	socket.on('news', function (data) {
-		console.log(data);
+	  console.log(data);
 	});
 
 	socket.on('emitOffer', function (data) {
-		var servers = null;
-		pc2 = new webkitRTCPeerConnection(servers);
-		pc2.onaddstream = gotRemoteStream;
-		pc2.setRemoteDescription(new RTCSessionDescription(data));
-		pc2.createAnswer().then(onCreateAnswerSuccess, null);
+	  var servers = null;
+	  pc2 = new webkitRTCPeerConnection(servers);
+	  pc2.onaddstream = gotRemoteStream;
+	  pc2.setRemoteDescription(new RTCSessionDescription(data));
+	  pc2.createAnswer().then(onCreateAnswerSuccess, null);
 	});
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
 
 	var Detector = {
 
