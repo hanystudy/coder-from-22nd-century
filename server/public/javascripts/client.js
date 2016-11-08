@@ -1,2 +1,2 @@
 require('./remoteVideo')
-require('./webgl')
+require('./webgl/index')
