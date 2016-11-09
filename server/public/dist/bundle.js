@@ -71,6 +71,7 @@
 	// let widget = new Widget()
 	// let cubeWidget = new CubeWidget()
 	// let videoWidget = new VideoWidget(remoteVideo, 576, 360)
+	// let mainWindow = new MainWindow(remoteVideo, window.innerWidth, window.innerHeight)
 	var mainWindow = new _mainWindow2.default(_remoteVideo2.default, window.innerWidth, window.innerHeight);
 
 /***/ },
@@ -423,6 +424,14 @@
 
 	var _widget2 = _interopRequireDefault(_widget);
 
+	var _display = __webpack_require__(7);
+
+	var _display2 = _interopRequireDefault(_display);
+
+	var _videoDisplay = __webpack_require__(8);
+
+	var _videoDisplay2 = _interopRequireDefault(_videoDisplay);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -431,8 +440,8 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var DISPLAY_WIDTH = 576,
-	    DISPLAY_HEIGHT = 360;
+	var DISPLAY_WIDTH = 2880,
+	    DISPLAY_HEIGHT = 1800;
 
 	var MainWindow = function (_Widget) {
 	  _inherits(MainWindow, _Widget);
@@ -440,19 +449,58 @@
 	  function MainWindow(video, width, height) {
 	    _classCallCheck(this, MainWindow);
 
-	    // create the video element
-	    //video = document.createElement( 'video' );
 	    var _this = _possibleConstructorReturn(this, (MainWindow.__proto__ || Object.getPrototypeOf(MainWindow)).call(this));
 
-	    _initialiseProps.call(_this);
+	    _this.createDisplayGroup = function () {
+	      var imageDisplay = new _display2.default(new THREE.TextureLoader().load("/images/checkerboard.jpg"), DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	      display.setPosition(100 + _this.windowWidth, 0, 0);
+	      _this.scene.add(display.getMesh());
+
+	      _this.videoDisplay = new _videoDisplay2.default(_this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	      _this.videoDisplay.setPosition(-_this.windowWidth / 2, 0, 0);
+	      _this.scene.add(_this.videoDisplay.getMesh());
+
+	      _this.videoDisplay1 = new _videoDisplay2.default(_this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	      _this.videoDisplay1.setPosition(_this.windowWidth * 2, 0, 0);
+	      _this.scene.add(_this.videoDisplay1.getMesh());
+	    };
+
+	    _this.initScene = function () {
+	      // SCENE
+	      var scene = new THREE.Scene();
+
+	      // LIGHT
+	      var light = new THREE.PointLight(0xffffff);
+	      light.position.set(0, 250, 0);
+	      scene.add(light);
+
+	      // FLOOR
+	      var floorTexture = new THREE.TextureLoader().load('/images/checkerboard.jpg');
+	      floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+	      floorTexture.repeat.set(10, 10);
+	      var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
+	      var floorGeometry = new THREE.PlaneGeometry(5000, 5000, 10, 10);
+	      var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+	      floor.position.y = -_this.windowHeight / 2;
+	      floor.rotation.x = Math.PI / 2;
+	      scene.add(floor);
+
+	      // SKYBOX/FOG
+	      var skyBoxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
+	      var skyBoxMaterial = new THREE.MeshBasicMaterial({ color: 0x9999ff, side: THREE.BackSide });
+	      var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+	      scene.add(skyBox);
+	      scene.fog = new THREE.FogExp2(0x9999ff, 0.00025);
+	      return scene;
+	    };
+
+	    _this.update = function () {
+	      _this.controls.update();
+	      _this.videoDisplay.update();
+	      _this.videoDisplay1.update();
+	    };
 
 	    _this.video = video;
-	    // video.id = 'video';
-	    // video.type = ' video/ogg; codecs="theora, vorbis" ';
-	    // video.src = "videos/sintel.ogv";
-	    _this.video.load();
-	    //video.play();
-
 	    _this.windowWidth = width;
 	    _this.windowHeight = height;
 
@@ -461,21 +509,11 @@
 	    _this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 10000);
 	    _this.scene = _this.initScene();
 
-	    _this.videoImageContext = null;
-	    _this.videoTexture = null;
-	    _this.initVideoContext();
-
-	    var movieScreen = _this.createMovieScreen();
-	    movieScreen.position.set(-_this.windowWidth / 2, 0, 0);
-	    _this.scene.add(movieScreen);
-
-	    var movieScreenRight = _this.createMovieScreen();
-	    movieScreen.position.set(100 + _this.windowWidth, 0, 0);
-	    _this.scene.add(movieScreenRight);
-
 	    _this.camera.position.set(_this.windowWidth / 2 + 50, _this.windowHeight / 2, 1000);
 	    _this.camera.lookAt(new THREE.Vector3(_this.windowWidth / 2 + 50, _this.windowHeight / 2, 0));
 	    _this.scene.add(_this.camera);
+
+	    _this.createDisplayGroup();
 
 	    _this.controls = new THREE.OrbitControls(_this.camera, _this.renderer.domElement);
 	    return _this;
@@ -484,75 +522,135 @@
 	  return MainWindow;
 	}(_widget2.default);
 
-	var _initialiseProps = function _initialiseProps() {
-	  var _this2 = this;
+	exports.default = MainWindow;
 
-	  this.initScene = function () {
-	    // SCENE
-	    var scene = new THREE.Scene();
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
 
-	    // LIGHT
-	    var light = new THREE.PointLight(0xffffff);
-	    light.position.set(0, 250, 0);
-	    scene.add(light);
+	"use strict";
 
-	    // FLOOR
-	    var floorTexture = new THREE.TextureLoader().load('/images/checkerboard.jpg');
-	    floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-	    floorTexture.repeat.set(10, 10);
-	    var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
-	    var floorGeometry = new THREE.PlaneGeometry(5000, 5000, 10, 10);
-	    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-	    floor.position.y = -_this2.windowHeight / 2;
-	    floor.rotation.x = Math.PI / 2;
-	    scene.add(floor);
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 
-	    // SKYBOX/FOG
-	    var skyBoxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
-	    var skyBoxMaterial = new THREE.MeshBasicMaterial({ color: 0x9999ff, side: THREE.BackSide });
-	    var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
-	    scene.add(skyBox);
-	    scene.fog = new THREE.FogExp2(0x9999ff, 0.00025);
-	    return scene;
-	  };
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	  this.initVideoContext = function () {
-	    var videoImage = document.createElement('canvas');
-	    videoImage.width = _this2.windowWidth;
-	    videoImage.height = _this2.windowHeight;
+	var Display = function Display(texture) {
+	  var width = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 576;
+	  var height = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 360;
 
-	    _this2.videoImageContext = videoImage.getContext('2d');
-	    // background color if no video present
-	    _this2.videoImageContext.fillStyle = '#ff0000';
-	    _this2.videoImageContext.fillRect(0, 0, videoImage.width, videoImage.height);
+	  _classCallCheck(this, Display);
 
-	    _this2.videoTexture = new THREE.Texture(videoImage);
-	    _this2.videoTexture.minFilter = THREE.LinearFilter;
-	    _this2.videoTexture.magFilter = THREE.LinearFilter;
-	  };
+	  _initialiseProps.call(this);
 
-	  this.createMovieScreen = function () {
-	    var movieMaterial = new THREE.MeshBasicMaterial({ map: _this2.videoTexture, overdraw: true, side: THREE.DoubleSide });
-	    // the geometry on which the movie will be displayed;
-	    // 		movie image will be scaled to fit these dimensions.
-	    var movieGeometry = new THREE.PlaneGeometry(_this2.windowWidth, _this2.windowHeight, 1, 1);
-	    var movieScreen = new THREE.Mesh(movieGeometry, movieMaterial);
-	    return movieScreen;
-	  };
+	  this.width = width;
+	  this.height = height;
 
-	  this.update = function () {
-	    _this2.controls.update();
-	  };
-
-	  this.render = function () {
-	    if (_this2.video.readyState === _this2.video.HAVE_ENOUGH_DATA) {
-	      _this2.videoImageContext.drawImage(_this2.video, 0, 0, _this2.windowWidth, _this2.windowHeight);
-	      if (_this2.videoTexture) _this2.videoTexture.needsUpdate = true;
-	    }
-	  };
+	  this.display = this.createDisplayMesh(texture);
 	};
 
-	exports.default = MainWindow;
+	var _initialiseProps = function _initialiseProps() {
+	  var _this = this;
+
+	  this.createDisplayMesh = function (texture) {
+	    var displayMaterial = new THREE.MeshBasicMaterial({ map: texture, overdraw: true, side: THREE.DoubleSide });
+	    var displayGeometry = new THREE.PlaneGeometry(_this.width, _this.height, 10, 10);
+	    return new THREE.Mesh(displayGeometry, displayMaterial);
+	  };
+
+	  this.getMesh = function () {
+	    return _this.display;
+	  };
+
+	  this.setPosition = function (x, y, z) {
+	    _this.display.position.set(x, y, z);
+	  };
+
+	  this.update = function () {};
+	};
+
+	exports.default = Display;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _display = __webpack_require__(7);
+
+	var _display2 = _interopRequireDefault(_display);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var VideoDisplay = function (_Display) {
+	  _inherits(VideoDisplay, _Display);
+
+	  function VideoDisplay(video) {
+	    var width = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 576;
+	    var height = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 360;
+
+	    _classCallCheck(this, VideoDisplay);
+
+	    var _this = _possibleConstructorReturn(this, (VideoDisplay.__proto__ || Object.getPrototypeOf(VideoDisplay)).call(this));
+
+	    _this.createContextAndTexture = function () {
+	      var videoImage = document.createElement('canvas');
+	      videoImage.width = _this.width;
+	      videoImage.height = _this.height;
+
+	      _this.videoImageContext = videoImage.getContext('2d');
+	      // background color if no video present
+	      _this.videoImageContext.fillStyle = '#00ff00';
+	      _this.videoImageContext.fillRect(0, 0, videoImage.width, videoImage.height);
+
+	      _this.videoTexture = new THREE.Texture(videoImage);
+	      _this.videoTexture.minFilter = THREE.LinearFilter;
+	      _this.videoTexture.magFilter = THREE.LinearFilter;
+	    };
+
+	    _this.update = function () {
+	      if (_this.video.readyState === _this.video.HAVE_ENOUGH_DATA) {
+	        _this.videoImageContext.drawImage(_this.video, 0, 0, _this.width, _this.height);
+	        if (_this.videoTexture) _this.videoTexture.needsUpdate = true;
+	      }
+	    };
+
+	    _this.width = width;
+	    _this.height = height;
+
+	    // create the video element
+	    //video = document.createElement( 'video' );
+	    _this.video = video;
+	    // video.id = 'video';
+	    // video.type = ' video/ogg; codecs="theora, vorbis" ';
+	    // video.src = "videos/sintel.ogv";
+	    _this.video.load();
+	    //video.play();
+
+	    _this.videoImageContext = null;
+	    _this.videoTexture = null;
+	    _this.createContextAndTexture();
+
+	    _this.display = _this.createDisplayMesh(_this.videoTexture);
+	    return _this;
+	  }
+
+	  return VideoDisplay;
+	}(_display2.default);
+
+	exports.default = VideoDisplay;
 
 /***/ }
 /******/ ]);
