@@ -476,6 +476,8 @@
 	    _this.camera.position.set(_this.windowWidth / 2 + 50, _this.windowHeight / 2, 1000);
 	    _this.camera.lookAt(new THREE.Vector3(_this.windowWidth / 2 + 50, _this.windowHeight / 2, 0));
 	    _this.scene.add(_this.camera);
+
+	    _this.controls = new THREE.OrbitControls(_this.camera, _this.renderer.domElement);
 	    return _this;
 	  }
 
@@ -499,9 +501,9 @@
 	    floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
 	    floorTexture.repeat.set(10, 10);
 	    var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
-	    var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
+	    var floorGeometry = new THREE.PlaneGeometry(5000, 5000, 10, 10);
 	    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-	    floor.position.y = -_this2.windowHeight;
+	    floor.position.y = -_this2.windowHeight / 2;
 	    floor.rotation.x = Math.PI / 2;
 	    scene.add(floor);
 
@@ -536,6 +538,10 @@
 	    var movieGeometry = new THREE.PlaneGeometry(_this2.windowWidth, _this2.windowHeight, 1, 1);
 	    var movieScreen = new THREE.Mesh(movieGeometry, movieMaterial);
 	    return movieScreen;
+	  };
+
+	  this.update = function () {
+	    _this2.controls.update();
 	  };
 
 	  this.render = function () {

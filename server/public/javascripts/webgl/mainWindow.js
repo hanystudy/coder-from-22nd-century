@@ -38,6 +38,8 @@ export default class MainWindow extends Widget {
     this.camera.position.set(this.windowWidth/2 + 50, this.windowHeight/2, 1000)
     this.camera.lookAt(new THREE.Vector3(this.windowWidth/2 + 50, this.windowHeight/2, 0))
     this.scene.add(this.camera)
+
+    this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement );
   }
 
   initScene = () => {
@@ -54,9 +56,9 @@ export default class MainWindow extends Widget {
     floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping
     floorTexture.repeat.set( 10, 10 )
     var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } )
-    var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10)
+    var floorGeometry = new THREE.PlaneGeometry(5000, 5000, 10, 10)
     var floor = new THREE.Mesh(floorGeometry, floorMaterial)
-    floor.position.y = - this.windowHeight
+    floor.position.y = -this.windowHeight / 2
     floor.rotation.x = Math.PI / 2
     scene.add(floor)
 
@@ -91,6 +93,10 @@ export default class MainWindow extends Widget {
     const movieGeometry = new THREE.PlaneGeometry( this.windowWidth, this.windowHeight, 1, 1)
     let movieScreen = new THREE.Mesh( movieGeometry, movieMaterial )
     return movieScreen
+  }
+
+  update = () => {
+    this.controls.update();
   }
 
   render = () => {
