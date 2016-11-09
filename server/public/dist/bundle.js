@@ -67,7 +67,7 @@
 	// let widget = new Widget()
 
 	// let cubeWidget = new CubeWidget()
-	var videoWidget = new _videoWidget2.default(_remoteVideo2.default);
+	var videoWidget = new _videoWidget2.default(_remoteVideo2.default, 288, 180);
 
 /***/ },
 /* 1 */
@@ -317,26 +317,39 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var SCREEN_WIDTH = window.innerWidth,
+	    SCREEN_HEIGHT = window.innerHeight;
+	var VIEW_ANGLE = 75,
+	    ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT,
+	    NEAR = 0.1,
+	    FAR = 10000;
+
 	var VideoWidget = function (_Widget) {
 	  _inherits(VideoWidget, _Widget);
 
-	  function VideoWidget(video) {
+	  function VideoWidget(video, width, height) {
 	    _classCallCheck(this, VideoWidget);
 
+	    // create the video element
+	    //video = document.createElement( 'video' );
 	    var _this = _possibleConstructorReturn(this, (VideoWidget.__proto__ || Object.getPrototypeOf(VideoWidget)).call(this));
 
 	    _initialiseProps.call(_this);
 
-	    _this.scene = _this.initScene();
-
-	    // create the video element
-	    //video = document.createElement( 'video' );
 	    _this.video = video;
 	    // video.id = 'video';
 	    // video.type = ' video/ogg; codecs="theora, vorbis" ';
 	    // video.src = "videos/sintel.ogv";
 	    _this.video.load();
 	    //video.play();
+
+	    _this.width = width;
+	    _this.height = height;
+
+	    _this.resizeWidget(_this.width, _this.height);
+
+	    _this.camera = new THREE.PerspectiveCamera(90, width / height, NEAR, FAR);
+	    _this.scene = new THREE.Scene();
 
 	    _this.videoImageContext = null;
 	    _this.videoTexture = null;
@@ -345,11 +358,40 @@
 	    var movieScreen = _this.createMovieScreen();
 	    _this.scene.add(movieScreen);
 
-	    _this.camera.position.set(0, 150, 300);
+	    _this.camera.position.set(0, 0, _this.height / 2);
 	    _this.camera.lookAt(movieScreen.position);
 	    _this.scene.add(_this.camera);
 	    return _this;
 	  }
+
+	  // initScene = () => {
+	  //   // SCENE
+	  //   let scene = new THREE.Scene()
+
+	  // LIGHT
+	  // var light = new THREE.PointLight(0xffffff)
+	  // light.position.set(0,250,0)
+	  // scene.add(light)
+
+	  // FLOOR
+	  // var floorTexture = new THREE.TextureLoader().load( '/images/checkerboard.jpg' )
+	  // floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping
+	  // floorTexture.repeat.set( 10, 10 )
+	  // var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } )
+	  // var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10)
+	  // var floor = new THREE.Mesh(floorGeometry, floorMaterial)
+	  // floor.position.y = -0.5
+	  // floor.rotation.x = Math.PI / 2
+	  // scene.add(floor)
+
+	  // SKYBOX/FOG
+	  // var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 )
+	  // var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } )
+	  // var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial )
+	  // scene.add(skyBox);
+	  // scene.fog = new THREE.FogExp2( 0x9999ff, 0.00025 )
+	  //   return scene
+	  // }
 
 	  return VideoWidget;
 	}(_widget2.default);
@@ -357,43 +399,14 @@
 	var _initialiseProps = function _initialiseProps() {
 	  var _this2 = this;
 
-	  this.initScene = function () {
-	    // SCENE
-	    var scene = new THREE.Scene();
-
-	    // LIGHT
-	    var light = new THREE.PointLight(0xffffff);
-	    light.position.set(0, 250, 0);
-	    scene.add(light);
-
-	    // FLOOR
-	    var floorTexture = new THREE.ImageUtils.loadTexture('images/checkerboard.jpg');
-	    floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-	    floorTexture.repeat.set(10, 10);
-	    var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
-	    var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
-	    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-	    floor.position.y = -0.5;
-	    floor.rotation.x = Math.PI / 2;
-	    scene.add(floor);
-
-	    // SKYBOX/FOG
-	    var skyBoxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
-	    var skyBoxMaterial = new THREE.MeshBasicMaterial({ color: 0x9999ff, side: THREE.BackSide });
-	    var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
-	    // scene.add(skyBox);
-	    scene.fog = new THREE.FogExp2(0x9999ff, 0.00025);
-	    return scene;
-	  };
-
 	  this.initVideoContext = function () {
 	    var videoImage = document.createElement('canvas');
-	    videoImage.width = 480;
-	    videoImage.height = 204;
+	    videoImage.width = _this2.width;
+	    videoImage.height = _this2.height;
 
 	    _this2.videoImageContext = videoImage.getContext('2d');
 	    // background color if no video present
-	    _this2.videoImageContext.fillStyle = '#000000';
+	    _this2.videoImageContext.fillStyle = '#ff0000';
 	    _this2.videoImageContext.fillRect(0, 0, videoImage.width, videoImage.height);
 
 	    _this2.videoTexture = new THREE.Texture(videoImage);
@@ -405,9 +418,9 @@
 	    var movieMaterial = new THREE.MeshBasicMaterial({ map: _this2.videoTexture, overdraw: true, side: THREE.DoubleSide });
 	    // the geometry on which the movie will be displayed;
 	    // 		movie image will be scaled to fit these dimensions.
-	    var movieGeometry = new THREE.PlaneGeometry(240, 100, 4, 4);
+	    var movieGeometry = new THREE.PlaneGeometry(_this2.width, _this2.height, 10, 10);
 	    var movieScreen = new THREE.Mesh(movieGeometry, movieMaterial);
-	    movieScreen.position.set(0, 50, 0);
+	    movieScreen.position.set(0, 0, 0);
 	    return movieScreen;
 	  };
 

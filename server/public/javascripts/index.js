@@ -6,4 +6,4 @@ import VideoWidget from './webgl/videoWidget'
 // let widget = new Widget()
 
 // let cubeWidget = new CubeWidget()
-let videoWidget = new VideoWidget(remoteVideo)
+let videoWidget = new VideoWidget(remoteVideo, 288, 180)
