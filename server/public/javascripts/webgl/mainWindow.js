@@ -2,7 +2,11 @@ import Widget from './widget'
 import Display from './display'
 import VideoDisplay from './videoDisplay'
 
-const DISPLAY_WIDTH = 2880, DISPLAY_HEIGHT = 1800
+const DISPLAY_WIDTH = 1920, DISPLAY_HEIGHT = 1080
+const DISPLAY_POSITIONS = [
+  [- DISPLAY_WIDTH * 3/2, 0, 0],[- DISPLAY_WIDTH/2, 0, 0],[DISPLAY_WIDTH/2, 0, 0],
+  [- DISPLAY_WIDTH * 3/2, DISPLAY_HEIGHT, 0],[- DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0],[DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0]
+]
 
 export default class MainWindow extends Widget {
   constructor(video, width, height) {
@@ -17,27 +21,30 @@ export default class MainWindow extends Widget {
     this.camera = new THREE.PerspectiveCamera( 75, width/height, 0.1, 10000)
     this.scene = this.initScene()
 
-    this.camera.position.set(this.windowWidth/2 + 50, this.windowHeight/2, 1000)
-    this.camera.lookAt(new THREE.Vector3(this.windowWidth/2 + 50, this.windowHeight/2, 0))
+    this.camera.position.set(0, this.windowHeight/2, 2000)
+    this.camera.lookAt(new THREE.Vector3(0, this.windowHeight/2, 0))
     this.scene.add(this.camera)
 
-    this.createDisplayGroup()
+    this.displays = this.createDisplayGroup()
 
     this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement );
   }
 
   createDisplayGroup = () => {
     let imageDisplay = new Display(new THREE.TextureLoader().load( "/images/checkerboard.jpg"), DISPLAY_WIDTH, DISPLAY_HEIGHT)
-    display.setPosition(100 + this.windowWidth, 0, 0)
-    this.scene.add(display.getMesh())
+    imageDisplay.setPosition(100 + this.windowWidth, 0, 0)
+    // this.scene.add(imageDisplay.getMesh())
 
-    this.videoDisplay = new VideoDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
-    this.videoDisplay.setPosition(-this.windowWidth/2, 0, 0)
-    this.scene.add(this.videoDisplay.getMesh())
+    let displays = []
+    DISPLAY_POSITIONS.forEach((position) => {
+      let video = this.video
+      let display = new VideoDisplay(video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
+      display.setPosition(...position)
+      this.scene.add(display.getMesh())
+      displays.push(display)
+    })
 
-    this.videoDisplay1 = new VideoDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
-    this.videoDisplay1.setPosition(this.windowWidth*2, 0, 0)
-    this.scene.add(this.videoDisplay1.getMesh())
+    return displays
   }
 
   initScene = () => {
@@ -70,8 +77,7 @@ export default class MainWindow extends Widget {
   }
 
   update = () => {
-    this.controls.update();
-    this.videoDisplay.update()
-    this.videoDisplay1.update()
+    // this.controls.update();
+    this.displays.forEach(display => display.update())
   }
 }

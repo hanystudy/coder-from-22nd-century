@@ -434,14 +434,17 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var DISPLAY_WIDTH = 2880,
-	    DISPLAY_HEIGHT = 1800;
+	var DISPLAY_WIDTH = 1920,
+	    DISPLAY_HEIGHT = 1080;
+	var DISPLAY_POSITIONS = [[-DISPLAY_WIDTH * 3 / 2, 0, 0], [-DISPLAY_WIDTH / 2, 0, 0], [DISPLAY_WIDTH / 2, 0, 0], [-DISPLAY_WIDTH * 3 / 2, DISPLAY_HEIGHT, 0], [-DISPLAY_WIDTH / 2, DISPLAY_HEIGHT, 0], [DISPLAY_WIDTH / 2, DISPLAY_HEIGHT, 0]];
 
 	var MainWindow = function (_Widget) {
 	  _inherits(MainWindow, _Widget);
@@ -451,54 +454,7 @@
 
 	    var _this = _possibleConstructorReturn(this, (MainWindow.__proto__ || Object.getPrototypeOf(MainWindow)).call(this));
 
-	    _this.createDisplayGroup = function () {
-	      var imageDisplay = new _display2.default(new THREE.TextureLoader().load("/images/checkerboard.jpg"), DISPLAY_WIDTH, DISPLAY_HEIGHT);
-	      display.setPosition(100 + _this.windowWidth, 0, 0);
-	      _this.scene.add(display.getMesh());
-
-	      _this.videoDisplay = new _videoDisplay2.default(_this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT);
-	      _this.videoDisplay.setPosition(-_this.windowWidth / 2, 0, 0);
-	      _this.scene.add(_this.videoDisplay.getMesh());
-
-	      _this.videoDisplay1 = new _videoDisplay2.default(_this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT);
-	      _this.videoDisplay1.setPosition(_this.windowWidth * 2, 0, 0);
-	      _this.scene.add(_this.videoDisplay1.getMesh());
-	    };
-
-	    _this.initScene = function () {
-	      // SCENE
-	      var scene = new THREE.Scene();
-
-	      // LIGHT
-	      var light = new THREE.PointLight(0xffffff);
-	      light.position.set(0, 250, 0);
-	      scene.add(light);
-
-	      // FLOOR
-	      var floorTexture = new THREE.TextureLoader().load('/images/checkerboard.jpg');
-	      floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-	      floorTexture.repeat.set(10, 10);
-	      var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
-	      var floorGeometry = new THREE.PlaneGeometry(5000, 5000, 10, 10);
-	      var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-	      floor.position.y = -_this.windowHeight / 2;
-	      floor.rotation.x = Math.PI / 2;
-	      scene.add(floor);
-
-	      // SKYBOX/FOG
-	      var skyBoxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
-	      var skyBoxMaterial = new THREE.MeshBasicMaterial({ color: 0x9999ff, side: THREE.BackSide });
-	      var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
-	      scene.add(skyBox);
-	      scene.fog = new THREE.FogExp2(0x9999ff, 0.00025);
-	      return scene;
-	    };
-
-	    _this.update = function () {
-	      _this.controls.update();
-	      _this.videoDisplay.update();
-	      _this.videoDisplay1.update();
-	    };
+	    _initialiseProps.call(_this);
 
 	    _this.video = video;
 	    _this.windowWidth = width;
@@ -509,11 +465,11 @@
 	    _this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 10000);
 	    _this.scene = _this.initScene();
 
-	    _this.camera.position.set(_this.windowWidth / 2 + 50, _this.windowHeight / 2, 1000);
-	    _this.camera.lookAt(new THREE.Vector3(_this.windowWidth / 2 + 50, _this.windowHeight / 2, 0));
+	    _this.camera.position.set(0, _this.windowHeight / 2, 2000);
+	    _this.camera.lookAt(new THREE.Vector3(0, _this.windowHeight / 2, 0));
 	    _this.scene.add(_this.camera);
 
-	    _this.createDisplayGroup();
+	    _this.displays = _this.createDisplayGroup();
 
 	    _this.controls = new THREE.OrbitControls(_this.camera, _this.renderer.domElement);
 	    return _this;
@@ -521,6 +477,63 @@
 
 	  return MainWindow;
 	}(_widget2.default);
+
+	var _initialiseProps = function _initialiseProps() {
+	  var _this2 = this;
+
+	  this.createDisplayGroup = function () {
+	    var imageDisplay = new _display2.default(new THREE.TextureLoader().load("/images/checkerboard.jpg"), DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	    imageDisplay.setPosition(100 + _this2.windowWidth, 0, 0);
+	    // this.scene.add(imageDisplay.getMesh())
+
+	    var displays = [];
+	    DISPLAY_POSITIONS.forEach(function (position) {
+	      var video = _this2.video;
+	      var display = new _videoDisplay2.default(video, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	      display.setPosition.apply(display, _toConsumableArray(position));
+	      _this2.scene.add(display.getMesh());
+	      displays.push(display);
+	    });
+
+	    return displays;
+	  };
+
+	  this.initScene = function () {
+	    // SCENE
+	    var scene = new THREE.Scene();
+
+	    // LIGHT
+	    var light = new THREE.PointLight(0xffffff);
+	    light.position.set(0, 250, 0);
+	    scene.add(light);
+
+	    // FLOOR
+	    var floorTexture = new THREE.TextureLoader().load('/images/checkerboard.jpg');
+	    floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+	    floorTexture.repeat.set(10, 10);
+	    var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
+	    var floorGeometry = new THREE.PlaneGeometry(5000, 5000, 10, 10);
+	    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+	    floor.position.y = -_this2.windowHeight / 2;
+	    floor.rotation.x = Math.PI / 2;
+	    scene.add(floor);
+
+	    // SKYBOX/FOG
+	    var skyBoxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
+	    var skyBoxMaterial = new THREE.MeshBasicMaterial({ color: 0x9999ff, side: THREE.BackSide });
+	    var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+	    scene.add(skyBox);
+	    scene.fog = new THREE.FogExp2(0x9999ff, 0.00025);
+	    return scene;
+	  };
+
+	  this.update = function () {
+	    // this.controls.update();
+	    _this2.displays.forEach(function (display) {
+	      return display.update();
+	    });
+	  };
+	};
 
 	exports.default = MainWindow;
 
