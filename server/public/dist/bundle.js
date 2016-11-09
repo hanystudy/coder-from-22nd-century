@@ -444,7 +444,8 @@
 
 	var DISPLAY_WIDTH = 1920,
 	    DISPLAY_HEIGHT = 1080;
-	var DISPLAY_POSITIONS = [[-DISPLAY_WIDTH * 3 / 2, 0, 0], [-DISPLAY_WIDTH / 2, 0, 0], [DISPLAY_WIDTH / 2, 0, 0], [-DISPLAY_WIDTH * 3 / 2, DISPLAY_HEIGHT, 0], [-DISPLAY_WIDTH / 2, DISPLAY_HEIGHT, 0], [DISPLAY_WIDTH / 2, DISPLAY_HEIGHT, 0]];
+	var DISPLAY_POSITIONS = [[-DISPLAY_WIDTH * 3 / 2, 0, 0], [-DISPLAY_WIDTH / 2, 0, 0], [DISPLAY_WIDTH / 2, 0, 0], [-DISPLAY_WIDTH * 3 / 2, DISPLAY_HEIGHT, 0], [-DISPLAY_WIDTH / 2, DISPLAY_HEIGHT, 0] //,[DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0]
+	];
 
 	var MainWindow = function (_Widget) {
 	  _inherits(MainWindow, _Widget);
@@ -482,11 +483,13 @@
 	  var _this2 = this;
 
 	  this.createDisplayGroup = function () {
-	    var imageDisplay = new _display2.default(new THREE.TextureLoader().load("/images/checkerboard.jpg"), DISPLAY_WIDTH, DISPLAY_HEIGHT);
-	    imageDisplay.setPosition(100 + _this2.windowWidth, 0, 0);
-	    // this.scene.add(imageDisplay.getMesh())
-
 	    var displays = [];
+
+	    var imageDisplay = new _display2.default(new THREE.TextureLoader().load("/images/checkerboard.jpg"), DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	    imageDisplay.setPosition(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT, 0);
+	    _this2.scene.add(imageDisplay.getMesh());
+	    displays.push(imageDisplay);
+
 	    DISPLAY_POSITIONS.forEach(function (position) {
 	      var video = _this2.video;
 	      var display = new _videoDisplay2.default(video, DISPLAY_WIDTH, DISPLAY_HEIGHT);
@@ -528,7 +531,7 @@
 	  };
 
 	  this.update = function () {
-	    // this.controls.update();
+	    _this2.controls.update();
 	    _this2.displays.forEach(function (display) {
 	      return display.update();
 	    });

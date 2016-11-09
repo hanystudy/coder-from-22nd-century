@@ -5,7 +5,7 @@ import VideoDisplay from './videoDisplay'
 const DISPLAY_WIDTH = 1920, DISPLAY_HEIGHT = 1080
 const DISPLAY_POSITIONS = [
   [- DISPLAY_WIDTH * 3/2, 0, 0],[- DISPLAY_WIDTH/2, 0, 0],[DISPLAY_WIDTH/2, 0, 0],
-  [- DISPLAY_WIDTH * 3/2, DISPLAY_HEIGHT, 0],[- DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0],[DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0]
+  [- DISPLAY_WIDTH * 3/2, DISPLAY_HEIGHT, 0],[- DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0]//,[DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0]
 ]
 
 export default class MainWindow extends Widget {
@@ -31,11 +31,13 @@ export default class MainWindow extends Widget {
   }
 
   createDisplayGroup = () => {
-    let imageDisplay = new Display(new THREE.TextureLoader().load( "/images/checkerboard.jpg"), DISPLAY_WIDTH, DISPLAY_HEIGHT)
-    imageDisplay.setPosition(100 + this.windowWidth, 0, 0)
-    // this.scene.add(imageDisplay.getMesh())
-
     let displays = []
+
+    let imageDisplay = new Display(new THREE.TextureLoader().load( "/images/checkerboard.jpg"), DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    imageDisplay.setPosition(DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0)
+    this.scene.add(imageDisplay.getMesh())
+    displays.push(imageDisplay)
+
     DISPLAY_POSITIONS.forEach((position) => {
       let video = this.video
       let display = new VideoDisplay(video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
@@ -77,7 +79,7 @@ export default class MainWindow extends Widget {
   }
 
   update = () => {
-    // this.controls.update();
+    this.controls.update();
     this.displays.forEach(display => display.update())
   }
 }
