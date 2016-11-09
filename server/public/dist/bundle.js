@@ -50,19 +50,19 @@
 
 	var _remoteVideo2 = _interopRequireDefault(_remoteVideo);
 
-	var _widget = __webpack_require__(2);
+	var _widget = __webpack_require__(3);
 
 	var _widget2 = _interopRequireDefault(_widget);
 
-	var _cubeWidget = __webpack_require__(4);
+	var _cubeWidget = __webpack_require__(5);
 
 	var _cubeWidget2 = _interopRequireDefault(_cubeWidget);
 
-	var _videoWidget = __webpack_require__(5);
+	var _videoWidget = __webpack_require__(6);
 
 	var _videoWidget2 = _interopRequireDefault(_videoWidget);
 
-	var _mainWindow = __webpack_require__(6);
+	var _mainWindow = __webpack_require__(7);
 
 	var _mainWindow2 = _interopRequireDefault(_mainWindow);
 
@@ -72,7 +72,9 @@
 	// let cubeWidget = new CubeWidget()
 	// let videoWidget = new VideoWidget(remoteVideo, 576, 360)
 	// let mainWindow = new MainWindow(remoteVideo, window.innerWidth, window.innerHeight)
-	var mainWindow = new _mainWindow2.default(_remoteVideo2.default, window.innerWidth, window.innerHeight);
+
+	// import camVideo from './camVideo'
+	var mainWindow = new _mainWindow2.default(null, _remoteVideo2.default, window.innerWidth, window.innerHeight);
 
 /***/ },
 /* 1 */
@@ -112,7 +114,8 @@
 	exports.default = remoteVideo;
 
 /***/ },
-/* 2 */
+/* 2 */,
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -121,7 +124,7 @@
 	  value: true
 	});
 
-	var _detector = __webpack_require__(3);
+	var _detector = __webpack_require__(4);
 
 	var _detector2 = _interopRequireDefault(_detector);
 
@@ -187,7 +190,7 @@
 	exports.default = Widget;
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -250,7 +253,7 @@
 	exports.default = Detector;
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -259,7 +262,7 @@
 	  value: true
 	});
 
-	var _widget = __webpack_require__(2);
+	var _widget = __webpack_require__(3);
 
 	var _widget2 = _interopRequireDefault(_widget);
 
@@ -301,7 +304,7 @@
 	exports.default = CubeWidget;
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -310,7 +313,7 @@
 	  value: true
 	});
 
-	var _widget = __webpack_require__(2);
+	var _widget = __webpack_require__(3);
 
 	var _widget2 = _interopRequireDefault(_widget);
 
@@ -411,7 +414,7 @@
 	exports.default = VideoWidget;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -420,15 +423,15 @@
 	  value: true
 	});
 
-	var _widget = __webpack_require__(2);
+	var _widget = __webpack_require__(3);
 
 	var _widget2 = _interopRequireDefault(_widget);
 
-	var _display = __webpack_require__(7);
+	var _display = __webpack_require__(8);
 
 	var _display2 = _interopRequireDefault(_display);
 
-	var _videoDisplay = __webpack_require__(8);
+	var _videoDisplay = __webpack_require__(9);
 
 	var _videoDisplay2 = _interopRequireDefault(_videoDisplay);
 
@@ -442,21 +445,80 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var DISPLAY_WIDTH = 1920,
-	    DISPLAY_HEIGHT = 1080;
+	var DISPLAY_WIDTH = 288,
+	    DISPLAY_HEIGHT = 180,
+	    DISTANCE = 400;
 	var DISPLAY_POSITIONS = [[-DISPLAY_WIDTH * 3 / 2, 0, 0], [-DISPLAY_WIDTH / 2, 0, 0], [DISPLAY_WIDTH / 2, 0, 0], [-DISPLAY_WIDTH * 3 / 2, DISPLAY_HEIGHT, 0], [-DISPLAY_WIDTH / 2, DISPLAY_HEIGHT, 0] //,[DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0]
 	];
 
 	var MainWindow = function (_Widget) {
 	  _inherits(MainWindow, _Widget);
 
-	  function MainWindow(video, width, height) {
+	  function MainWindow(camVideo, video, width, height) {
 	    _classCallCheck(this, MainWindow);
 
 	    var _this = _possibleConstructorReturn(this, (MainWindow.__proto__ || Object.getPrototypeOf(MainWindow)).call(this));
 
-	    _initialiseProps.call(_this);
+	    _this.createDisplayGroup = function () {
+	      var displays = [];
 
+	      var imageDisplay = new _display2.default(new THREE.TextureLoader().load("/images/checkerboard.jpg"), DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	      imageDisplay.setPosition(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT, 0);
+	      _this.scene.add(imageDisplay.getMesh());
+	      displays.push(imageDisplay);
+
+	      // let webcamDisplay = new VideoDisplay(this.camVideo, DISPLAY_WIDTH, DISPLAY_HEIGHT)
+	      // webcamDisplay.setPosition(-DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0)
+	      // this.scene.add(webcamDisplay.getMesh())
+	      // displays.push(webcamDisplay)
+
+	      DISPLAY_POSITIONS.forEach(function (position) {
+	        var display = new _videoDisplay2.default(_this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	        display.setPosition.apply(display, _toConsumableArray(position));
+	        _this.scene.add(display.getMesh());
+	        displays.push(display);
+	      });
+
+	      return displays;
+	    };
+
+	    _this.initScene = function () {
+	      // SCENE
+	      var scene = new THREE.Scene();
+
+	      // LIGHT
+	      var light = new THREE.PointLight(0xffffff);
+	      light.position.set(0, 250, 0);
+	      scene.add(light);
+
+	      // FLOOR
+	      var floorTexture = new THREE.TextureLoader().load('/images/checkerboard.jpg');
+	      floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+	      floorTexture.repeat.set(10, 10);
+	      var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
+	      var floorGeometry = new THREE.PlaneGeometry(8000, 8000, 10, 10);
+	      var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+	      floor.position.y = -DISPLAY_HEIGHT / 2;
+	      floor.rotation.x = Math.PI / 2;
+	      scene.add(floor);
+
+	      // SKYBOX/FOG
+	      var skyBoxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
+	      var skyBoxMaterial = new THREE.MeshBasicMaterial({ color: 0x9999ff, side: THREE.BackSide });
+	      var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+	      scene.add(skyBox);
+	      scene.fog = new THREE.FogExp2(0x9999ff, 0.00025);
+	      return scene;
+	    };
+
+	    _this.update = function () {
+	      _this.controls.update();
+	      _this.displays.forEach(function (display) {
+	        return display.update();
+	      });
+	    };
+
+	    _this.camVideo = camVideo;
 	    _this.video = video;
 	    _this.windowWidth = width;
 	    _this.windowHeight = height;
@@ -466,8 +528,8 @@
 	    _this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 10000);
 	    _this.scene = _this.initScene();
 
-	    _this.camera.position.set(0, _this.windowHeight / 2, 2000);
-	    _this.camera.lookAt(new THREE.Vector3(0, _this.windowHeight / 2, 0));
+	    _this.camera.position.set(0, _this.windowHeight, 0);
+	    _this.camera.lookAt(new THREE.Vector3(0, _this.windowHeight / 4, DISTANCE));
 	    _this.scene.add(_this.camera);
 
 	    _this.displays = _this.createDisplayGroup();
@@ -479,69 +541,10 @@
 	  return MainWindow;
 	}(_widget2.default);
 
-	var _initialiseProps = function _initialiseProps() {
-	  var _this2 = this;
-
-	  this.createDisplayGroup = function () {
-	    var displays = [];
-
-	    var imageDisplay = new _display2.default(new THREE.TextureLoader().load("/images/checkerboard.jpg"), DISPLAY_WIDTH, DISPLAY_HEIGHT);
-	    imageDisplay.setPosition(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT, 0);
-	    _this2.scene.add(imageDisplay.getMesh());
-	    displays.push(imageDisplay);
-
-	    DISPLAY_POSITIONS.forEach(function (position) {
-	      var video = _this2.video;
-	      var display = new _videoDisplay2.default(video, DISPLAY_WIDTH, DISPLAY_HEIGHT);
-	      display.setPosition.apply(display, _toConsumableArray(position));
-	      _this2.scene.add(display.getMesh());
-	      displays.push(display);
-	    });
-
-	    return displays;
-	  };
-
-	  this.initScene = function () {
-	    // SCENE
-	    var scene = new THREE.Scene();
-
-	    // LIGHT
-	    var light = new THREE.PointLight(0xffffff);
-	    light.position.set(0, 250, 0);
-	    scene.add(light);
-
-	    // FLOOR
-	    var floorTexture = new THREE.TextureLoader().load('/images/checkerboard.jpg');
-	    floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-	    floorTexture.repeat.set(10, 10);
-	    var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
-	    var floorGeometry = new THREE.PlaneGeometry(5000, 5000, 10, 10);
-	    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-	    floor.position.y = -_this2.windowHeight / 2;
-	    floor.rotation.x = Math.PI / 2;
-	    scene.add(floor);
-
-	    // SKYBOX/FOG
-	    var skyBoxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
-	    var skyBoxMaterial = new THREE.MeshBasicMaterial({ color: 0x9999ff, side: THREE.BackSide });
-	    var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
-	    scene.add(skyBox);
-	    scene.fog = new THREE.FogExp2(0x9999ff, 0.00025);
-	    return scene;
-	  };
-
-	  this.update = function () {
-	    _this2.controls.update();
-	    _this2.displays.forEach(function (display) {
-	      return display.update();
-	    });
-	  };
-	};
-
 	exports.default = MainWindow;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -589,7 +592,7 @@
 	exports.default = Display;
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -598,7 +601,7 @@
 	  value: true
 	});
 
-	var _display = __webpack_require__(7);
+	var _display = __webpack_require__(8);
 
 	var _display2 = _interopRequireDefault(_display);
 
