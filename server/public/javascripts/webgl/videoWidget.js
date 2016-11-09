@@ -21,7 +21,7 @@ export default class VideoWidget extends Widget {
 
     this.resizeWidget(this.width, this.height)
 
-    this.camera = new THREE.PerspectiveCamera( 90, width/height, 0.1, 10000)
+    this.camera = new THREE.PerspectiveCamera( 90, this.width/this.height, 0.1, 10000)
     this.scene = new THREE.Scene()
 
     this.videoImageContext = null
@@ -29,9 +29,10 @@ export default class VideoWidget extends Widget {
     this.initVideoContext()
 
     const movieScreen = this.createMovieScreen()
+    movieScreen.position.set(0,0,0)
     this.scene.add(movieScreen)
 
-    this.camera.position.set(0,0,this.height/2)
+    this.camera.position.set(0, 0,this.height/2)
     this.camera.lookAt(movieScreen.position)
     this.scene.add(this.camera)
   }
@@ -55,15 +56,14 @@ export default class VideoWidget extends Widget {
     const movieMaterial = new THREE.MeshBasicMaterial( { map: this.videoTexture, overdraw: true, side:THREE.DoubleSide } );
     // the geometry on which the movie will be displayed;
     // 		movie image will be scaled to fit these dimensions.
-    const movieGeometry = new THREE.PlaneGeometry( this.width, this.height, 10, 10 );
-    let movieScreen = new THREE.Mesh( movieGeometry, movieMaterial );
-    movieScreen.position.set(0,0,0);
+    const movieGeometry = new THREE.PlaneGeometry( this.width, this.height, 10, 10)
+    let movieScreen = new THREE.Mesh( movieGeometry, movieMaterial )
     return movieScreen
   }
 
   render = () => {
     if (this.video.readyState === this.video.HAVE_ENOUGH_DATA) {
-      this.videoImageContext.drawImage( this.video, 0, 0 )
+      this.videoImageContext.drawImage( this.video, 0, 0, this.width, this.height )
       if ( this.videoTexture )
   			this.videoTexture.needsUpdate = true
     }

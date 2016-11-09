@@ -348,7 +348,7 @@
 
 	    _this.resizeWidget(_this.width, _this.height);
 
-	    _this.camera = new THREE.PerspectiveCamera(90, width / height, NEAR, FAR);
+	    _this.camera = new THREE.PerspectiveCamera(90, _this.width / _this.height, 0.1, 10000);
 	    _this.scene = new THREE.Scene();
 
 	    _this.videoImageContext = null;
@@ -356,6 +356,7 @@
 	    _this.initVideoContext();
 
 	    var movieScreen = _this.createMovieScreen();
+	    movieScreen.position.set(0, 0, 0);
 	    _this.scene.add(movieScreen);
 
 	    _this.camera.position.set(0, 0, _this.height / 2);
@@ -363,35 +364,6 @@
 	    _this.scene.add(_this.camera);
 	    return _this;
 	  }
-
-	  // initScene = () => {
-	  //   // SCENE
-	  //   let scene = new THREE.Scene()
-
-	  // LIGHT
-	  // var light = new THREE.PointLight(0xffffff)
-	  // light.position.set(0,250,0)
-	  // scene.add(light)
-
-	  // FLOOR
-	  // var floorTexture = new THREE.TextureLoader().load( '/images/checkerboard.jpg' )
-	  // floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping
-	  // floorTexture.repeat.set( 10, 10 )
-	  // var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } )
-	  // var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10)
-	  // var floor = new THREE.Mesh(floorGeometry, floorMaterial)
-	  // floor.position.y = -0.5
-	  // floor.rotation.x = Math.PI / 2
-	  // scene.add(floor)
-
-	  // SKYBOX/FOG
-	  // var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 )
-	  // var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } )
-	  // var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial )
-	  // scene.add(skyBox);
-	  // scene.fog = new THREE.FogExp2( 0x9999ff, 0.00025 )
-	  //   return scene
-	  // }
 
 	  return VideoWidget;
 	}(_widget2.default);
@@ -420,13 +392,12 @@
 	    // 		movie image will be scaled to fit these dimensions.
 	    var movieGeometry = new THREE.PlaneGeometry(_this2.width, _this2.height, 10, 10);
 	    var movieScreen = new THREE.Mesh(movieGeometry, movieMaterial);
-	    movieScreen.position.set(0, 0, 0);
 	    return movieScreen;
 	  };
 
 	  this.render = function () {
 	    if (_this2.video.readyState === _this2.video.HAVE_ENOUGH_DATA) {
-	      _this2.videoImageContext.drawImage(_this2.video, 0, 0);
+	      _this2.videoImageContext.drawImage(_this2.video, 0, 0, _this2.width, _this2.height);
 	      if (_this2.videoTexture) _this2.videoTexture.needsUpdate = true;
 	    }
 	  };
