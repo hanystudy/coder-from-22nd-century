@@ -2,10 +2,10 @@ import Widget from './widget'
 import Display from './display'
 import VideoDisplay from './videoDisplay'
 
-const DISPLAY_WIDTH = 288, DISPLAY_HEIGHT = 180, DISTANCE = 200
+const DISPLAY_WIDTH = 288, DISPLAY_HEIGHT = 180, DISTANCE = 300
 const DISPLAY_POSITIONS = [
-  [-DISPLAY_WIDTH * 3/2, 0, 0],[-DISPLAY_WIDTH/2, 0, 0],[DISPLAY_WIDTH/2, 0, 0],
-  [-DISPLAY_WIDTH * 3/2, DISPLAY_HEIGHT, 0],[-DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0]//,[DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0]
+  [-DISPLAY_WIDTH -10, 0, 0],[0, 0, 0],[DISPLAY_WIDTH +10, 0, 0],
+  // [-DISPLAY_WIDTH -10, DISPLAY_HEIGHT, 0],[0, DISPLAY_HEIGHT, 0],[DISPLAY_WIDTH +10, DISPLAY_HEIGHT, 0]
 ]
 
 export default class MainWindow extends Widget {
@@ -19,12 +19,14 @@ export default class MainWindow extends Widget {
 
     // this.resizeWidget(this.windowWidth, this.windowHeight)
 
-    this.camera = new THREE.PerspectiveCamera( 75, width/height, 0.1, 10000)
+    this.camera = new THREE.PerspectiveCamera( 45, DISPLAY_WIDTH/DISPLAY_HEIGHT, 0.1, 10000)
     this.scene = this.initScene()
 
-    this.camera.position.set(0, DISPLAY_HEIGHT, DISTANCE)
-    this.camera.lookAt(new THREE.Vector3(0, DISPLAY_HEIGHT, 0))
+    this.camera.position.set(0, 0, DISTANCE)
+    this.camera.lookAt(new THREE.Vector3(0, 0, 0))
     this.scene.add(this.camera)
+
+    // this.scene.add(new THREE.AxisHelper(50))
 
     this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement)
 
@@ -37,10 +39,10 @@ export default class MainWindow extends Widget {
   createDisplayGroup = () => {
     let displays = []
 
-    let imageDisplay = new Display(new THREE.TextureLoader().load( "/images/checkerboard.jpg"), DISPLAY_WIDTH, DISPLAY_HEIGHT)
-    imageDisplay.setPosition(DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0)
-    this.scene.add(imageDisplay.getMesh())
-    displays.push(imageDisplay)
+    // let imageDisplay = new Display(new THREE.TextureLoader().load( "/images/checkerboard.jpg"), DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    // imageDisplay.setPosition(DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0)
+    // this.scene.add(imageDisplay.getMesh())
+    // displays.push(imageDisplay)
 
     // let webcamDisplay = new VideoDisplay(camVideo, DISPLAY_WIDTH, DISPLAY_HEIGHT)
     // webcamDisplay.setPosition(-DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0)
@@ -73,7 +75,7 @@ export default class MainWindow extends Widget {
     var floorMaterial = new THREE.MeshBasicMaterial( { wireframe: true, /*map: floorTexture, */side: THREE.DoubleSide } )
     var floorGeometry = new THREE.PlaneGeometry(8000, 8000, 100, 100)
     var floor = new THREE.Mesh(floorGeometry, floorMaterial)
-    floor.position.y = -DISPLAY_HEIGHT / 2
+    floor.position.set(0, -DISPLAY_HEIGHT/2, 0)
     floor.rotation.x = Math.PI / 2
     scene.add(floor)
 
