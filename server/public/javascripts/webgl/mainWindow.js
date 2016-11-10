@@ -9,10 +9,9 @@ const DISPLAY_POSITIONS = [
 ]
 
 export default class MainWindow extends Widget {
-  constructor(camVideo, video, width, height) {
+  constructor(video, width, height) {
     super()
 
-    this.camVideo = camVideo
     this.video = video
     this.windowWidth = width
     this.windowHeight = height
@@ -43,11 +42,6 @@ export default class MainWindow extends Widget {
     // imageDisplay.setPosition(DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0)
     // this.scene.add(imageDisplay.getMesh())
     // displays.push(imageDisplay)
-
-    // let webcamDisplay = new VideoDisplay(camVideo, DISPLAY_WIDTH, DISPLAY_HEIGHT)
-    // webcamDisplay.setPosition(-DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0)
-    // this.scene.add(webcamDisplay.getMesh())
-    // displays.push(webcamDisplay)
 
     DISPLAY_POSITIONS.forEach((position) => {
       let display = new VideoDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
