@@ -21216,24 +21216,28 @@
 	    _this.windowChange = function (id, sourceObject) {
 	      var checkedSources = Object.assign({}, _this.state.checkedSources);
 	      checkedSources[id] = sourceObject;
+	      var pc1 = _this.state.webrtc;
 	      if (sourceObject.checked) {
-	        (function () {
-	          var onCreateOfferSuccess = function onCreateOfferSuccess(desc) {
-	            pc1.setLocalDescription(desc);
-	            _socketio.socket.emit('offer', desc);
-	          };
+	        var onCreateOfferSuccess = function onCreateOfferSuccess(desc) {
+	          pc1.setLocalDescription(desc);
+	          _socketio.socket.emit('offer', desc);
+	        };
 
-	          var onCreateSessionDescriptionError = function onCreateSessionDescriptionError(error) {};
+	        var onCreateSessionDescriptionError = function onCreateSessionDescriptionError(error) {};
 
-	          var pc1 = _this.state.webrtc;
-	          var offerOptions = {
-	            offerToReceiveAudio: 1,
-	            offerToReceiveVideo: 1
-	          };
+	        var offerOptions = {
+	          offerToReceiveAudio: 1,
+	          offerToReceiveVideo: 1
+	        };
 
-	          pc1.addStream(sourceObject.stream);
-	          pc1.createOffer(offerOptions).then(onCreateOfferSuccess, onCreateSessionDescriptionError);
-	        })();
+	        pc1.onicecandidate = function (e) {
+	          if (e.candidate) _socketio.socket.emit('offerCandidate', e.candidate);
+	        };
+	        pc1.getLocalStreams().forEach(function (stream) {
+	          pc1.removeStream(stream);
+	        });
+	        pc1.addStream(sourceObject.stream);
+	        pc1.createOffer(offerOptions).then(onCreateOfferSuccess, onCreateSessionDescriptionError);
 	      }
 	      _this.setState({ checkedSources: checkedSources });
 	    };
@@ -21256,6 +21260,12 @@
 	      _socketio.socket.on('news', function (data) {});
 	      _socketio.socket.on('answer', function (data) {
 	        pc1.setRemoteDescription(new RTCSessionDescription(data));
+	      });
+	      _socketio.socket.on('answerCandidate', function (data) {
+	        pc1.addIceCandidate(new RTCIceCandidate(data));
+	      });
+	      _socketio.socket.on('connect_timeout', function () {
+	        _socketio.socket.disconnect();
 	      });
 
 	      desktopCapturer.getSources({ types: ['window', 'screen'] }, function (error, sources) {

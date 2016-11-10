@@ -16,10 +16,16 @@ export default class WindowContainer extends React.Component {
     let servers = null
     let pc1 = new webkitRTCPeerConnection(servers)
 
-    socket.on('news', function (data) {});
-    socket.on('answer', function (data) {
+    socket.on('news', function (data) {})
+    socket.on('answer', (data) => {
       pc1.setRemoteDescription(new RTCSessionDescription(data))
     });
+    socket.on('answerCandidate', (data) => {
+      pc1.addIceCandidate(new RTCIceCandidate(data))
+    });
+    socket.on('connect_timeout', function () {
+      socket.disconnect()
+    })
 
     desktopCapturer.getSources({types: ['window', 'screen']}, (error, sources) => {
       this.setState({webrtc: pc1, sources})
@@ -35,8 +41,8 @@ export default class WindowContainer extends React.Component {
   windowChange = (id, sourceObject) => {
     let checkedSources = Object.assign({}, this.state.checkedSources)
     checkedSources[id] = sourceObject
+    let pc1 = this.state.webrtc
     if (sourceObject.checked) {
-      let pc1 = this.state.webrtc
       let offerOptions = {
         offerToReceiveAudio: 1,
         offerToReceiveVideo: 1
@@ -47,6 +53,13 @@ export default class WindowContainer extends React.Component {
       }
       function onCreateSessionDescriptionError(error) {
       }
+      pc1.onicecandidate = function(e) {
+        if (e.candidate)
+          socket.emit('offerCandidate', e.candidate)
+      }
+      pc1.getLocalStreams().forEach(function(stream) {
+        pc1.removeStream(stream);
+      });
       pc1.addStream(sourceObject.stream)
       pc1.createOffer(
         offerOptions

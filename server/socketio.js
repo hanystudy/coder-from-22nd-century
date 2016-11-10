@@ -11,6 +11,12 @@ function socket(server) {
     socket.on('connect_timeout', function (data) {
       socket.disconnect();
     });
+    socket.on('offerCandidate', function (data) {
+      io.sockets.emit('offerCandidate', data);
+    });
+    socket.on('answerCandidate', function (data) {
+      io.sockets.emit('answerCandidate', data);
+    });
   });
 }
 module.exports = socket;
