@@ -2,9 +2,9 @@ import Widget from './widget'
 import Display from './display'
 import VideoDisplay from './videoDisplay'
 
-const DISPLAY_WIDTH = 288, DISPLAY_HEIGHT = 180, DISTANCE = 300
+const DISPLAY_WIDTH = 288, DISPLAY_HEIGHT = 180, DISTANCE = 400, GAP = 10
 const DISPLAY_POSITIONS = [
-  [-DISPLAY_WIDTH -10, 0, 0],[0, 0, 0],[DISPLAY_WIDTH +10, 0, 0],
+  [-DISPLAY_WIDTH -GAP, 0, 0],[0, 0, 0],[DISPLAY_WIDTH +GAP, 0, 0],
   // [-DISPLAY_WIDTH -10, DISPLAY_HEIGHT, 0],[0, DISPLAY_HEIGHT, 0],[DISPLAY_WIDTH +10, DISPLAY_HEIGHT, 0]
 ]
 
@@ -55,6 +55,9 @@ export default class MainWindow extends Widget {
       this.scene.add(display.getMesh())
       displays.push(display)
     })
+
+    displays[0].getMesh().translateX(DISPLAY_WIDTH/2 + GAP).rotateY(Math.PI/4).translateX(-DISPLAY_WIDTH/2 - GAP)
+    displays[2].getMesh().translateX(-DISPLAY_WIDTH/2 - GAP).rotateY(-Math.PI/4).translateX(DISPLAY_WIDTH/2 + GAP)
 
     return displays
   }
