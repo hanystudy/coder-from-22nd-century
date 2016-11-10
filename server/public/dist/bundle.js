@@ -467,7 +467,7 @@
 	      _this.scene.add(imageDisplay.getMesh());
 	      displays.push(imageDisplay);
 
-	      // let webcamDisplay = new VideoDisplay(this.camVideo, DISPLAY_WIDTH, DISPLAY_HEIGHT)
+	      // let webcamDisplay = new VideoDisplay(camVideo, DISPLAY_WIDTH, DISPLAY_HEIGHT)
 	      // webcamDisplay.setPosition(-DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0)
 	      // this.scene.add(webcamDisplay.getMesh())
 	      // displays.push(webcamDisplay)
@@ -495,8 +495,8 @@
 	      var floorTexture = new THREE.TextureLoader().load('/images/checkerboard.jpg');
 	      floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
 	      floorTexture.repeat.set(10, 10);
-	      var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
-	      var floorGeometry = new THREE.PlaneGeometry(8000, 8000, 10, 10);
+	      var floorMaterial = new THREE.MeshBasicMaterial({ wireframe: false, map: floorTexture, side: THREE.DoubleSide });
+	      var floorGeometry = new THREE.PlaneGeometry(8000, 8000, 100, 100);
 	      var floor = new THREE.Mesh(floorGeometry, floorMaterial);
 	      floor.position.y = -DISPLAY_HEIGHT / 2;
 	      floor.rotation.x = Math.PI / 2;
@@ -512,10 +512,10 @@
 	    };
 
 	    _this.update = function () {
-	      _this.controls.update();
 	      _this.displays.forEach(function (display) {
 	        return display.update();
 	      });
+	      _this.controls.update();
 	    };
 
 	    _this.camVideo = camVideo;
@@ -528,13 +528,13 @@
 	    _this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 10000);
 	    _this.scene = _this.initScene();
 
-	    _this.camera.position.set(0, _this.windowHeight, 0);
-	    _this.camera.lookAt(new THREE.Vector3(0, _this.windowHeight / 4, DISTANCE));
+	    _this.camera.position.set(0, DISPLAY_HEIGHT, DISTANCE);
+	    _this.camera.lookAt(new THREE.Vector3(0, DISPLAY_HEIGHT, 0));
 	    _this.scene.add(_this.camera);
 
-	    _this.displays = _this.createDisplayGroup();
-
 	    _this.controls = new THREE.OrbitControls(_this.camera, _this.renderer.domElement);
+
+	    _this.displays = _this.createDisplayGroup();
 	    return _this;
 	  }
 
