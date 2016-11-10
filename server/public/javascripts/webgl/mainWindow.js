@@ -16,7 +16,7 @@ export default class MainWindow extends Widget {
     this.windowWidth = width
     this.windowHeight = height
 
-    // this.resizeWidget(this.windowWidth, this.windowHeight)
+    this.resizeWidget(this.windowWidth, this.windowHeight)
 
     this.camera = new THREE.PerspectiveCamera( 45, DISPLAY_WIDTH/DISPLAY_HEIGHT, 0.1, 10000)
     this.scene = this.initScene()
@@ -38,11 +38,6 @@ export default class MainWindow extends Widget {
   createDisplayGroup = () => {
     let displays = []
 
-    // let imageDisplay = new Display(new THREE.TextureLoader().load( "/images/checkerboard.jpg"), DISPLAY_WIDTH, DISPLAY_HEIGHT)
-    // imageDisplay.setPosition(DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0)
-    // this.scene.add(imageDisplay.getMesh())
-    // displays.push(imageDisplay)
-
     DISPLAY_POSITIONS.forEach((position) => {
       let display = new VideoDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
       display.setPosition(...position)
@@ -57,31 +52,19 @@ export default class MainWindow extends Widget {
   }
 
   initScene = () => {
-    // SCENE
     let scene = new THREE.Scene()
 
-    // LIGHT
-    var light = new THREE.PointLight(0xffffff)
-    light.position.set(0,250,0)
-    scene.add(light)
-
-    // FLOOR
-    // var floorTexture = new THREE.TextureLoader().load( '/images/checkerboard.jpg' )
-    // floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping
-    // floorTexture.repeat.set( 10, 10 )
-    var floorMaterial = new THREE.MeshBasicMaterial( { wireframe: true, /*map: floorTexture, */side: THREE.DoubleSide } )
-    var floorGeometry = new THREE.PlaneGeometry(8000, 8000, 100, 100)
+    var floorMaterial = new THREE.MeshBasicMaterial( { wireframe: true, side: THREE.DoubleSide } )
+    var floorGeometry = new THREE.PlaneGeometry(2000, 2000, 50, 50)
     var floor = new THREE.Mesh(floorGeometry, floorMaterial)
     floor.position.set(0, -DISPLAY_HEIGHT/2, 0)
     floor.rotation.x = Math.PI / 2
     scene.add(floor)
 
-    // SKYBOX/FOG
-    var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 )
+    var skyBoxGeometry = new THREE.CubeGeometry( 5000, 5000, 5000 )
     var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } )
     var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial )
     scene.add(skyBox)
-    // scene.fog = new THREE.FogExp2( 0x9999ff, 0.00025 )
     return scene
   }
 
