@@ -2,7 +2,7 @@ import Widget from './widget'
 import Display from './display'
 import VideoDisplay from './videoDisplay'
 
-const DISPLAY_WIDTH = 288, DISPLAY_HEIGHT = 180, DISTANCE = 400
+const DISPLAY_WIDTH = 288, DISPLAY_HEIGHT = 180, DISTANCE = 200
 const DISPLAY_POSITIONS = [
   [-DISPLAY_WIDTH * 3/2, 0, 0],[-DISPLAY_WIDTH/2, 0, 0],[DISPLAY_WIDTH/2, 0, 0],
   [-DISPLAY_WIDTH * 3/2, DISPLAY_HEIGHT, 0],[-DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0]//,[DISPLAY_WIDTH/2, DISPLAY_HEIGHT, 0]
