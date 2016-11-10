@@ -17,7 +17,7 @@ export default class MainWindow extends Widget {
     this.windowWidth = width
     this.windowHeight = height
 
-    this.resizeWidget(this.windowWidth, this.windowHeight)
+    // this.resizeWidget(this.windowWidth, this.windowHeight)
 
     this.camera = new THREE.PerspectiveCamera( 75, width/height, 0.1, 10000)
     this.scene = this.initScene()
@@ -27,6 +27,9 @@ export default class MainWindow extends Widget {
     this.scene.add(this.camera)
 
     this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement)
+
+    THREEx.WindowResize(this.renderer, this.camera);
+    THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
 
     this.displays = this.createDisplayGroup()
   }

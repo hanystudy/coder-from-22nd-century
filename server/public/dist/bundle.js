@@ -50,19 +50,19 @@
 
 	var _remoteVideo2 = _interopRequireDefault(_remoteVideo);
 
-	var _widget = __webpack_require__(3);
+	var _widget = __webpack_require__(2);
 
 	var _widget2 = _interopRequireDefault(_widget);
 
-	var _cubeWidget = __webpack_require__(5);
+	var _cubeWidget = __webpack_require__(4);
 
 	var _cubeWidget2 = _interopRequireDefault(_cubeWidget);
 
-	var _videoWidget = __webpack_require__(6);
+	var _videoWidget = __webpack_require__(5);
 
 	var _videoWidget2 = _interopRequireDefault(_videoWidget);
 
-	var _mainWindow = __webpack_require__(7);
+	var _mainWindow = __webpack_require__(6);
 
 	var _mainWindow2 = _interopRequireDefault(_mainWindow);
 
@@ -126,8 +126,7 @@
 	exports.default = remoteVideo;
 
 /***/ },
-/* 2 */,
-/* 3 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -136,7 +135,7 @@
 	  value: true
 	});
 
-	var _detector = __webpack_require__(4);
+	var _detector = __webpack_require__(3);
 
 	var _detector2 = _interopRequireDefault(_detector);
 
@@ -202,7 +201,7 @@
 	exports.default = Widget;
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -265,7 +264,7 @@
 	exports.default = Detector;
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -274,7 +273,7 @@
 	  value: true
 	});
 
-	var _widget = __webpack_require__(3);
+	var _widget = __webpack_require__(2);
 
 	var _widget2 = _interopRequireDefault(_widget);
 
@@ -316,7 +315,7 @@
 	exports.default = CubeWidget;
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -325,7 +324,7 @@
 	  value: true
 	});
 
-	var _widget = __webpack_require__(3);
+	var _widget = __webpack_require__(2);
 
 	var _widget2 = _interopRequireDefault(_widget);
 
@@ -426,7 +425,7 @@
 	exports.default = VideoWidget;
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -435,15 +434,15 @@
 	  value: true
 	});
 
-	var _widget = __webpack_require__(3);
+	var _widget = __webpack_require__(2);
 
 	var _widget2 = _interopRequireDefault(_widget);
 
-	var _display = __webpack_require__(8);
+	var _display = __webpack_require__(7);
 
 	var _display2 = _interopRequireDefault(_display);
 
-	var _videoDisplay = __webpack_require__(9);
+	var _videoDisplay = __webpack_require__(8);
 
 	var _videoDisplay2 = _interopRequireDefault(_videoDisplay);
 
@@ -535,7 +534,7 @@
 	    _this.windowWidth = width;
 	    _this.windowHeight = height;
 
-	    _this.resizeWidget(_this.windowWidth, _this.windowHeight);
+	    // this.resizeWidget(this.windowWidth, this.windowHeight)
 
 	    _this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 10000);
 	    _this.scene = _this.initScene();
@@ -545,6 +544,9 @@
 	    _this.scene.add(_this.camera);
 
 	    _this.controls = new THREE.OrbitControls(_this.camera, _this.renderer.domElement);
+
+	    THREEx.WindowResize(_this.renderer, _this.camera);
+	    THREEx.FullScreen.bindKey({ charCode: 'm'.charCodeAt(0) });
 
 	    _this.displays = _this.createDisplayGroup();
 	    return _this;
@@ -556,7 +558,7 @@
 	exports.default = MainWindow;
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -604,7 +606,7 @@
 	exports.default = Display;
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -613,7 +615,7 @@
 	  value: true
 	});
 
-	var _display = __webpack_require__(8);
+	var _display = __webpack_require__(7);
 
 	var _display2 = _interopRequireDefault(_display);
 
