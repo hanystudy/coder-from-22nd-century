@@ -1,6 +1,7 @@
 import Widget from './widget'
 import Display from './display'
 import VideoDisplay from './videoDisplay'
+import SurfaceDisplay from './surfaceDisplay'
 
 const DISPLAY_WIDTH = 288, DISPLAY_HEIGHT = 180, DISTANCE = 400, GAP = 10
 const DISPLAY_POSITIONS = [
@@ -48,6 +49,11 @@ export default class MainWindow extends Widget {
     displays[0].getMesh().translateX(DISPLAY_WIDTH/2 + GAP).rotateY(Math.PI/4).translateX(-DISPLAY_WIDTH/2 - GAP)
     displays[2].getMesh().translateX(-DISPLAY_WIDTH/2 - GAP).rotateY(-Math.PI/4).translateX(DISPLAY_WIDTH/2 + GAP)
 
+    let surfaceDisplay = new SurfaceDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT, DISTANCE)
+    surfaceDisplay.setPosition(-GAP/4.5, 0, DISTANCE/1.4)
+    surfaceDisplay.getMesh().rotateY(Math.PI).translateZ(-DISTANCE/1.6)
+    this.scene.add(surfaceDisplay.getMesh())
+    displays.push(surfaceDisplay)
     return displays
   }
 
