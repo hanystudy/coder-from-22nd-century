@@ -1,2 +1,4 @@
 node_modules/
+public/
+server/public/dist/
 npm-debug.log

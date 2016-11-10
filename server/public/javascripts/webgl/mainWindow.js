@@ -67,10 +67,10 @@ export default class MainWindow extends Widget {
     scene.add(light)
 
     // FLOOR
-    var floorTexture = new THREE.TextureLoader().load( '/images/checkerboard.jpg' )
-    floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping
-    floorTexture.repeat.set( 10, 10 )
-    var floorMaterial = new THREE.MeshBasicMaterial( { wireframe: false, map: floorTexture, side: THREE.DoubleSide } )
+    // var floorTexture = new THREE.TextureLoader().load( '/images/checkerboard.jpg' )
+    // floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping
+    // floorTexture.repeat.set( 10, 10 )
+    var floorMaterial = new THREE.MeshBasicMaterial( { wireframe: true, /*map: floorTexture, */side: THREE.DoubleSide } )
     var floorGeometry = new THREE.PlaneGeometry(8000, 8000, 100, 100)
     var floor = new THREE.Mesh(floorGeometry, floorMaterial)
     floor.position.y = -DISPLAY_HEIGHT / 2
@@ -82,7 +82,7 @@ export default class MainWindow extends Widget {
     var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } )
     var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial )
     scene.add(skyBox)
-    scene.fog = new THREE.FogExp2( 0x9999ff, 0.00025 )
+    // scene.fog = new THREE.FogExp2( 0x9999ff, 0.00025 )
     return scene
   }
 
