@@ -5,9 +5,15 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     block content
+    script(src='/javascripts/webvrconfig.js')
+    script(src='/javascripts/webvr-polyfill.js')
+    script(src='/javascripts/webvr-polyfill-init.js')
     script(src='/javascripts/three.min.js')
     script(src='/javascripts/THREEx.FullScreen.js')
     script(src='/javascripts/THREEx.WindowResize.js')
     script(src='/javascripts/centerControls.js')
     script(src='/javascripts/socket.io.js')
+    script(src='/javascripts/webvr/vreffect.js')
+    script(src='/javascripts/webvr/vrcontrol.js')
+    script(src='/javascripts/webvr/webvr.js')
     script(src='/dist/bundle.js')

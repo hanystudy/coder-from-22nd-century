@@ -23,7 +23,11 @@ export default class Window extends React.Component {
         video: {
           mandatory: {
             chromeMediaSource: 'desktop',
-            chromeMediaSourceId: source.id
+            chromeMediaSourceId: source.id,
+            minWidth: 1440,
+            maxWidth: 1440,
+            minHeight: 900,
+            maxHeight: 900
           }
         }
       }, handleStream, handleError)

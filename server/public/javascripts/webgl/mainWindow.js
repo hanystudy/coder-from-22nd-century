@@ -3,10 +3,11 @@ import Display from './display'
 import VideoDisplay from './videoDisplay'
 import SurfaceDisplay from './surfaceDisplay'
 
-const DISPLAY_WIDTH = 288, DISPLAY_HEIGHT = 180, DISTANCE = 400, GAP = 10
+// const DISPLAY_WIDTH = 288, DISPLAY_HEIGHT = 180, DISTANCE = 400, GAP = 10
+const DISPLAY_WIDTH = 1440, DISPLAY_HEIGHT = 900, DISTANCE = 400, GAP = 1
 const DISPLAY_POSITIONS = [
-  [-DISPLAY_WIDTH -GAP, 0, 0],[0, 0, 0],[DISPLAY_WIDTH +GAP, 0, 0],
-  // [-DISPLAY_WIDTH -10, DISPLAY_HEIGHT, 0],[0, DISPLAY_HEIGHT, 0],[DISPLAY_WIDTH +10, DISPLAY_HEIGHT, 0]
+  [0, 0, -600],
+  // [-DISPLAY_WIDTH -GAP, 0, -600],[0, 0, -600],[DISPLAY_WIDTH +GAP, 0, -600],
 ]
 
 export default class MainWindow extends Widget {
@@ -20,10 +21,11 @@ export default class MainWindow extends Widget {
     this.resizeWidget(this.windowWidth, this.windowHeight)
 
     this.camera = new THREE.PerspectiveCamera( 45, DISPLAY_WIDTH/DISPLAY_HEIGHT, 0.1, 10000)
+    // this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 10000)
     this.scene = this.initScene()
 
-    this.camera.position.set(0, 0, DISTANCE)
-    this.camera.lookAt(new THREE.Vector3(0, 0, 0))
+    this.camera.position.set(0, 0, 0)
+    this.camera.lookAt(new THREE.Vector3(0, 0, 1))
     this.scene.add(this.camera)
 
     // this.scene.add(new THREE.AxisHelper(50))
@@ -46,8 +48,8 @@ export default class MainWindow extends Widget {
       displays.push(display)
     })
 
-    displays[0].getMesh().translateX(DISPLAY_WIDTH/2 + GAP).rotateY(Math.PI/4).translateX(-DISPLAY_WIDTH/2 - GAP)
-    displays[2].getMesh().translateX(-DISPLAY_WIDTH/2 - GAP).rotateY(-Math.PI/4).translateX(DISPLAY_WIDTH/2 + GAP)
+    // displays[0].getMesh().translateX(DISPLAY_WIDTH/2 + GAP).rotateY(Math.PI/4).translateX(-DISPLAY_WIDTH/2 - GAP)
+    // displays[2].getMesh().translateX(-DISPLAY_WIDTH/2 - GAP).rotateY(-Math.PI/4).translateX(DISPLAY_WIDTH/2 + GAP)
 
     // let surfaceDisplay = new SurfaceDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT, DISTANCE)
     // surfaceDisplay.setPosition(-GAP/4.5, 0, DISTANCE/1.4)
@@ -74,8 +76,14 @@ export default class MainWindow extends Widget {
     return scene
   }
 
+  setVR = (controls, effect) => {
+    this.effect = effect
+    this.controls = controls
+  }
+
   update = () => {
     this.displays.forEach(display => display.update())
     this.controls.update()
+    this.effect.render( this.scene, this.camera )
   }
 }
