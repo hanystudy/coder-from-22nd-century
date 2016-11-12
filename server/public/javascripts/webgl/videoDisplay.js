@@ -24,25 +24,14 @@ export default class VideoDisplay extends Display{
   }
 
   createContextAndTexture = () => {
-    let videoImage = document.createElement( 'canvas' )
-    videoImage.width = this.width
-    videoImage.height = this.height
-
-    this.videoImageContext = videoImage.getContext( '2d' )
-    // background color if no video present
-    this.videoImageContext.fillStyle = '#00ff00'
-    this.videoImageContext.fillRect( 0, 0, videoImage.width, videoImage.height )
-
-    this.videoTexture = new THREE.Texture( videoImage )
+    this.videoTexture = new THREE.Texture( this.video )
     this.videoTexture.minFilter = THREE.LinearFilter
     this.videoTexture.magFilter = THREE.LinearFilter
   }
 
   update = () => {
     if (this.video.readyState === this.video.HAVE_ENOUGH_DATA) {
-      this.videoImageContext.drawImage(this.video, 0, 0, this.width, this.height)
-      if (this.videoTexture)
-        this.videoTexture.needsUpdate = true
+      this.videoTexture.needsUpdate = true
     }
   }
 }
