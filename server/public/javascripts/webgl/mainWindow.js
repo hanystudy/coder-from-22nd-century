@@ -4,7 +4,7 @@ import VideoDisplay from './videoDisplay'
 import SurfaceDisplay from './surfaceDisplay'
 
 // const DISPLAY_WIDTH = 288, DISPLAY_HEIGHT = 180, DISTANCE = 400, GAP = 10
-const DISPLAY_WIDTH = 1440, DISPLAY_HEIGHT = 900, DISTANCE = 400, GAP = 1
+const DISPLAY_WIDTH = 1440, DISPLAY_HEIGHT = 900, DISTANCE = 200, GAP = 1
 const DISPLAY_POSITIONS = [
   [0, 0, -600],
   // [-DISPLAY_WIDTH -GAP, 0, -600],[0, 0, -600],[DISPLAY_WIDTH +GAP, 0, -600],
@@ -20,7 +20,7 @@ export default class MainWindow extends Widget {
 
     this.resizeWidget(this.windowWidth, this.windowHeight)
 
-    this.camera = new THREE.PerspectiveCamera( 45, DISPLAY_WIDTH/DISPLAY_HEIGHT, 0.1, 10000)
+    this.camera = new THREE.PerspectiveCamera( 60, DISPLAY_WIDTH/DISPLAY_HEIGHT, 0.1, 10000)
     // this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 10000)
     this.scene = this.initScene()
 
@@ -41,21 +41,21 @@ export default class MainWindow extends Widget {
   createDisplayGroup = () => {
     let displays = []
 
-    DISPLAY_POSITIONS.forEach((position) => {
-      let display = new VideoDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
-      display.setPosition(...position)
-      this.scene.add(display.getMesh())
-      displays.push(display)
-    })
+    // DISPLAY_POSITIONS.forEach((position) => {
+    //   let display = new VideoDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    //   display.setPosition(...position)
+    //   this.scene.add(display.getMesh())
+    //   displays.push(display)
+    // })
 
     // displays[0].getMesh().translateX(DISPLAY_WIDTH/2 + GAP).rotateY(Math.PI/4).translateX(-DISPLAY_WIDTH/2 - GAP)
     // displays[2].getMesh().translateX(-DISPLAY_WIDTH/2 - GAP).rotateY(-Math.PI/4).translateX(DISPLAY_WIDTH/2 + GAP)
 
-    // let surfaceDisplay = new SurfaceDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT, DISTANCE)
-    // surfaceDisplay.setPosition(-GAP/4.5, 0, DISTANCE/1.4)
-    // surfaceDisplay.getMesh().rotateY(Math.PI).translateZ(-DISTANCE/1.6)
-    // this.scene.add(surfaceDisplay.getMesh())
-    // displays.push(surfaceDisplay)
+    let surfaceDisplay = new SurfaceDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    surfaceDisplay.setPosition(0, 0, -DISTANCE)
+    this.scene.add(surfaceDisplay.getMesh())
+    displays.push(surfaceDisplay)
+
     return displays
   }
 

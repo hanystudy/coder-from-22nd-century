@@ -8,8 +8,12 @@ export default class SurfaceDisplay extends VideoDisplay {
   }
 
   createDisplayMesh = (texture) => {
-    const displayMaterial = new THREE.MeshBasicMaterial({ map: texture, overdraw: true, side: THREE.DoubleSide})
-    const displayGeometry = new THREE.SphereGeometry(75, 16, 8, 3.095, 3.15, 1, 1.1);
+	texture.flipY = false
+    const displayMaterial = new THREE.MeshBasicMaterial({ /*wireframe: true, */map: texture, overdraw: true, side: THREE.DoubleSide})
+    let displayGeometry = new THREE.CylinderGeometry( 1.0, 1.0, this.height/this.width/2.0, 100.0, 100.0, true, -0.25, 0.5 );
+    displayGeometry.rotateY(-Math.PI).rotateZ(Math.PI)
+    displayGeometry.scale(this.height, this.height, this.height)
+    displayGeometry.translate(0, 0, this.height)
     return new THREE.Mesh(displayGeometry, displayMaterial)
   }
 }
