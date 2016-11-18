@@ -24,10 +24,10 @@ export default class Window extends React.Component {
           mandatory: {
             chromeMediaSource: 'desktop',
             chromeMediaSourceId: source.id,
-            minWidth: 1440,
-            maxWidth: 1440,
-            minHeight: 900,
-            maxHeight: 900
+            minWidth: 960,
+            maxWidth: 960,
+            minHeight: 600,
+            maxHeight: 600
           }
         }
       }, handleStream, handleError)

@@ -2,9 +2,7 @@ import Widget from './widget'
 import Display from './display'
 import VideoDisplay from './videoDisplay'
 import SurfaceDisplay from './surfaceDisplay'
-
-// const DISPLAY_WIDTH = 288, DISPLAY_HEIGHT = 180, DISTANCE = 400, GAP = 10
-const DISPLAY_WIDTH = 1440, DISPLAY_HEIGHT = 900, DISTANCE = 200, GAP = 1
+const DISPLAY_WIDTH = 960, DISPLAY_HEIGHT = 600, DISTANCE = 280, GAP = 1
 const DISPLAY_POSITIONS = [
   [0, 0, -600],
   // [-DISPLAY_WIDTH -GAP, 0, -600],[0, 0, -600],[DISPLAY_WIDTH +GAP, 0, -600],
@@ -20,8 +18,8 @@ export default class MainWindow extends Widget {
 
     this.resizeWidget(this.windowWidth, this.windowHeight)
 
-    this.camera = new THREE.PerspectiveCamera( 60, DISPLAY_WIDTH/DISPLAY_HEIGHT, 0.1, 10000)
-    // this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 10000)
+    this.camera = new THREE.PerspectiveCamera( 60, DISPLAY_WIDTH/DISPLAY_HEIGHT, 0.1, 1000)
+    // this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000)
     this.scene = this.initScene()
 
     this.camera.position.set(0, 0, 0)
@@ -52,7 +50,7 @@ export default class MainWindow extends Widget {
     // displays[2].getMesh().translateX(-DISPLAY_WIDTH/2 - GAP).rotateY(-Math.PI/4).translateX(DISPLAY_WIDTH/2 + GAP)
 
     let surfaceDisplay = new SurfaceDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
-    surfaceDisplay.setPosition(0, 0, -DISTANCE)
+    surfaceDisplay.setPosition(0, -25, -DISTANCE)
     this.scene.add(surfaceDisplay.getMesh())
     displays.push(surfaceDisplay)
 
@@ -67,12 +65,11 @@ export default class MainWindow extends Widget {
     var floor = new THREE.Mesh(floorGeometry, floorMaterial)
     floor.position.set(0, -DISPLAY_HEIGHT/2, 0)
     floor.rotation.x = Math.PI / 2
-    scene.add(floor)
-
+    // scene.add(floor)
     var skyBoxGeometry = new THREE.CubeGeometry( 5000, 5000, 5000 )
     var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } )
     var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial )
-    scene.add(skyBox)
+    // scene.add(skyBox)
     return scene
   }
 
