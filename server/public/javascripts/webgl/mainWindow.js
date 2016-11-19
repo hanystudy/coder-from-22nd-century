@@ -66,10 +66,17 @@ export default class MainWindow extends Widget {
     floor.position.set(0, -DISPLAY_HEIGHT/2, 0)
     floor.rotation.x = Math.PI / 2
     // scene.add(floor)
-    var skyBoxGeometry = new THREE.CubeGeometry( 5000, 5000, 5000 )
-    var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } )
-    var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial )
-    // scene.add(skyBox)
+    var imageLoader = new THREE.TextureLoader()
+    imageLoader.load("/images/uni_lowfi.jpg", function(backgroundTexture) {
+      var material = new THREE.MeshBasicMaterial({map:backgroundTexture, side: THREE.BackSide})
+      var skyBox = new THREE.Mesh(
+        new THREE.SphereGeometry(1000,60,40),
+        material
+      );
+      mesh.position.set(0, 0, 0)
+      scene.add(skyBox)
+    });
+
     return scene
   }
 

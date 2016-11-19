@@ -12,3 +12,7 @@ a {
   left:0px;
   top:0px;
 }
+
+video {
+  display: none;
+}
