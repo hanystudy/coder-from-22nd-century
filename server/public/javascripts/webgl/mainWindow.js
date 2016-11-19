@@ -73,7 +73,7 @@ export default class MainWindow extends Widget {
         new THREE.SphereGeometry(1000,60,40),
         material
       );
-      mesh.position.set(0, 0, 0)
+      skyBox.position.set(0, 0, 0)
       scene.add(skyBox)
     });
 
