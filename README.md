@@ -25,16 +25,24 @@ It's strictly limited to mobile devices and hardly to be resolved by us. But our
 In development we switched to 1024*640 for Mac Pro, you could try higher if you have screen with 1080p or plus.
 
 ## How to use
+
+Install packages for both desktop code and server code:
 ```[shell]
 npm install
-
+```
+Build bundle.js for both desktop code and server code:
+```[shell]
+webpack
+```
+Under root path, run:
+```[shell]
 npm start
 ```
 Open chrome in your cardboard device, and access:
 
 http://host:8301
 
-Try to active some applications screen in Host side and Come back to VR.
+Try to active some applications screen in host side and come back to VR.
 
 Enjoy and be dizzy:p
 
