@@ -54,6 +54,19 @@ export default class MainWindow extends Widget {
     this.scene.add(surfaceDisplay.getMesh())
     displays.push(surfaceDisplay)
 
+    let surfaceDisplayLeft = new SurfaceDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    surfaceDisplayLeft.getMesh().rotateY(Math.PI / 3.8)
+    surfaceDisplayLeft.setPosition(-DISPLAY_WIDTH/3.5, -25, -DISTANCE + 110)
+    this.scene.add(surfaceDisplayLeft.getMesh())
+    displays.push(surfaceDisplayLeft)
+
+    let surfaceDisplayTop = new SurfaceDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    surfaceDisplayTop.getMesh().rotateX(Math.PI / 24)
+    surfaceDisplayTop.setPosition(0, DISPLAY_HEIGHT/4, -DISTANCE + 8)
+    this.scene.add(surfaceDisplayTop.getMesh())
+    displays.push(surfaceDisplayTop)
+
+
     return displays
   }
 
