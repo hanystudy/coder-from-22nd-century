@@ -8,27 +8,25 @@ export default class WindowContainer extends React.Component {
     super()
     this.state = {
       sources: [],
-      checkedSources: {}
+      checkedSources: {},
+      checkedWebRTC: {}
     }
+    this.webrtc = null
   }
 
   componentDidMount() {
-    let servers = null
-    let pc1 = new webkitRTCPeerConnection(servers)
-
     socket.on('news', function (data) {})
     socket.on('answer', (data) => {
-      pc1.setRemoteDescription(new RTCSessionDescription(data))
+      this.webrtc.setRemoteDescription(new RTCSessionDescription(data))
     });
     socket.on('answerCandidate', (data) => {
-      pc1.addIceCandidate(new RTCIceCandidate(data))
+      this.webrtc.addIceCandidate(new RTCIceCandidate(data))
     });
     socket.on('connect_timeout', function () {
       socket.disconnect()
     })
-
     desktopCapturer.getSources({types: ['window', 'screen']}, (error, sources) => {
-      this.setState({webrtc: pc1, sources})
+      this.setState({sources})
     })
   }
 
@@ -40,9 +38,18 @@ export default class WindowContainer extends React.Component {
 
   windowChange = (id, sourceObject) => {
     let checkedSources = Object.assign({}, this.state.checkedSources)
-    checkedSources[id] = sourceObject
-    let pc1 = this.state.webrtc
+    let checkedWebRTC = Object.assign({}, this.state.checkedWebRTC)
     if (sourceObject.checked) {
+      checkedSources[id] = sourceObject
+      let pc1 = null
+      if (window.RTCPeerConnection) {
+        pc1 = new RTCPeerConnection(null)
+      }
+      else {
+        pc1 = new webkitRTCPeerConnection(null)
+      }
+      this.webrtc = pc1
+      checkedWebRTC[id] = pc1
       let offerOptions = {
         offerToReceiveAudio: 1,
         offerToReceiveVideo: 1
@@ -57,9 +64,6 @@ export default class WindowContainer extends React.Component {
         if (e.candidate)
           socket.emit('offerCandidate', e.candidate)
       }
-      pc1.getLocalStreams().forEach(function(stream) {
-        pc1.removeStream(stream);
-      });
       pc1.addStream(sourceObject.stream)
       pc1.createOffer(
         offerOptions
@@ -68,7 +72,16 @@ export default class WindowContainer extends React.Component {
         onCreateSessionDescriptionError
       )
     }
-    this.setState({checkedSources})
+    else {
+      let pc1 = checkedWebRTC[id]
+      checkedSources[id] = null
+      pc1.getLocalStreams().forEach((stream) => {
+        pc1.removeStream(stream)
+      })
+      pc1.close()
+      checkedWebRTC[id] = null
+    }
+    this.setState({checkedSources, checkedWebRTC})
   }
 
   render() {

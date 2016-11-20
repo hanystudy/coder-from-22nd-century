@@ -9,10 +9,10 @@ const DISPLAY_POSITIONS = [
 ]
 
 export default class MainWindow extends Widget {
-  constructor(video, width, height) {
+  constructor(videos, width, height) {
     super()
 
-    this.video = video
+    this.videos = videos
     this.windowWidth = width
     this.windowHeight = height
 
@@ -49,20 +49,26 @@ export default class MainWindow extends Widget {
     // displays[0].getMesh().translateX(DISPLAY_WIDTH/2 + GAP).rotateY(Math.PI/4).translateX(-DISPLAY_WIDTH/2 - GAP)
     // displays[2].getMesh().translateX(-DISPLAY_WIDTH/2 - GAP).rotateY(-Math.PI/4).translateX(DISPLAY_WIDTH/2 + GAP)
 
-    let surfaceDisplay = new SurfaceDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    let surfaceDisplay = new SurfaceDisplay(this.videos[0], DISPLAY_WIDTH, DISPLAY_HEIGHT)
     surfaceDisplay.setPosition(0, -25, -DISTANCE)
     this.scene.add(surfaceDisplay.getMesh())
     displays.push(surfaceDisplay)
 
-    let surfaceDisplayLeft = new SurfaceDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
-    surfaceDisplayLeft.getMesh().rotateY(Math.PI / 3.6)
+    let surfaceDisplayLeft = new SurfaceDisplay(this.videos[2], DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    surfaceDisplayLeft.getMesh().rotateY(Math.PI / 2.6)
     surfaceDisplayLeft.setPosition(-DISPLAY_WIDTH/3.5, -25, -DISTANCE + 110)
     this.scene.add(surfaceDisplayLeft.getMesh())
     displays.push(surfaceDisplayLeft)
 
-    let surfaceDisplayTop = new SurfaceDisplay(this.video, DISPLAY_WIDTH, DISPLAY_HEIGHT)
-    surfaceDisplayTop.getMesh().rotateX(Math.PI / 24)
-    surfaceDisplayTop.setPosition(0, DISPLAY_HEIGHT/3.8, -DISTANCE + 8)
+    let surfaceDisplayRight = new SurfaceDisplay(this.videos[3], DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    surfaceDisplayRight.getMesh().rotateY(-Math.PI / 2.6)
+    surfaceDisplayRight.setPosition(DISPLAY_WIDTH/3.5, -25, -DISTANCE + 110)
+    this.scene.add(surfaceDisplayRight.getMesh())
+    displays.push(surfaceDisplayRight)
+
+    let surfaceDisplayTop = new SurfaceDisplay(this.videos[1], DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    surfaceDisplayTop.getMesh().rotateX(Math.PI / 16)
+    surfaceDisplayTop.setPosition(0, DISPLAY_HEIGHT/3.5, -DISTANCE + 8)
     this.scene.add(surfaceDisplayTop.getMesh())
     displays.push(surfaceDisplayTop)
 
