@@ -4,6 +4,8 @@
 
 A demo of Micro-Situational Mixed Reality. You could check it out from [this article](http://www.hanyi.name/blog/2016/11/20/micro-situational-mixed-reality/) (Chinese only).
 
+![Full](http://7xk84n.com1.z0.glb.clouddn.com/c22/full.jpg)
+
 Does world still need coders in 22nd century? No one knows except who may have ability on somehow mysterious prophecy. Depending on the trend of technology growth in next decades years, while it is indeed possible to deliver a blueprint which describes a programming scene that overcomes the gap from time to space, from devices to brains.
 
 ## Compatibility
@@ -18,11 +20,15 @@ There is no stable version browser supporting WebVR natively, luckily we use web
 
 Besides WebVR, The incompatibility is mainly from WebRTC, which Safari totally ignore (should be released in 2017).
 
+## Network
+
+In development we prefer using WIFI HotSpot directly than communicating through any AP. Please make sure your WIFI environment is unlimited otherwise there may be unbearable lag in mobile devices.
+
 ## Resolution
 
 It's strictly limited to mobile devices and hardly to be resolved by us. But our suggestion is just using lower display resolution in your PC.
 
-In development we switched to 1024*640 for Mac Pro, you could try higher if you have screen with 1080p or plus.
+In development we switched to 1024*640 for Mac Pro, you could try higher if you have mobile screen with 1080p or plus.
 
 ## How to use
 
