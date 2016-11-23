@@ -4,7 +4,7 @@
 // In the renderer process.
 import React from 'react'
 import ReactDOM from 'react-dom'
-import WindowContainer from './windowContainer'
+import WindowContainer from './components/windowContainer'
 
 ReactDOM.render(
   <WindowContainer/>,

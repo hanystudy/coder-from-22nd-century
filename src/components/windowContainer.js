@@ -1,7 +1,7 @@
 import React from 'react'
 import Window from './window'
 const {desktopCapturer} = require('electron')
-import {socket} from './socketio'
+import {socket} from '../common/socketio'
 
 export default class WindowContainer extends React.Component {
   constructor() {
