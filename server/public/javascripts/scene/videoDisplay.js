@@ -1,6 +1,8 @@
 import Display from './display'
 
 export default class VideoDisplay extends Display{
+  THREE = window.THREE || {};
+
   constructor(video, width = 576, height = 360) {
     super()
 

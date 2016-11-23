@@ -3,7 +3,10 @@
  * @author mrdoob / http://mrdoob.com
  * @author alteredq / http://alteredqualia.com/
  * @author WestLangley / http://github.com/WestLangley
+ * @revisedBy hanystudy / https://github.com/hanystudy
  */
+
+var THREE = window.THREE || {};
 
 THREE.OrbitControls = function ( object, domElement ) {
 
@@ -150,8 +153,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	this.update = function () {
 
-		var position = this.object.position;
-		var offset = position.clone().sub( this.center );
+		var position = this.center;
+		var offset = position.clone().sub( this.object.position );
 
 		// angle from z-axis around y-axis
 
@@ -185,7 +188,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 		offset.y = radius * Math.cos( phi );
 		offset.z = radius * Math.sin( phi ) * Math.cos( theta );
 
-		position.copy( this.center ).add( offset );
+		position.copy( this.object.position ).add( offset );
 
 		this.object.lookAt( this.center );
 
@@ -193,11 +196,11 @@ THREE.OrbitControls = function ( object, domElement ) {
 		phiDelta = 0;
 		scale = 1;
 
-		if ( lastPosition.distanceTo( this.object.position ) > 0 ) {
+		if ( lastPosition.distanceTo( this.center ) > 0 ) {
 
 			this.dispatchEvent( changeEvent );
 
-			lastPosition.copy( this.object.position );
+			lastPosition.copy( this.center );
 
 		}
 
@@ -232,8 +235,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 			if ( event.button === 2 )
 				state = STATE.PAN;
 		}
-		
-		
+
+
 		if ( state === STATE.ROTATE ) {
 
 			//state = STATE.ROTATE;
@@ -263,8 +266,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		event.preventDefault();
 
-		
-		
+
+
 		if ( state === STATE.ROTATE ) {
 
 			rotateEnd.set( event.clientX, event.clientY );
@@ -373,11 +376,11 @@ THREE.OrbitControls = function ( object, domElement ) {
 			case scope.keys.PAN:
 				state = STATE.PAN;
 				break;
-				
+
 		}
 
 	}
-	
+
 	function onKeyUp( event ) {
 
 		switch ( event.keyCode ) {

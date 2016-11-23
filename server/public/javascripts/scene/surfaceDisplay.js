@@ -1,6 +1,8 @@
 import VideoDisplay from './videoDisplay'
 
 export default class SurfaceDisplay extends VideoDisplay {
+  THREE = window.THREE || {};
+
   constructor(video, width = 576, height = 360) {
     super(video, width, height)
 

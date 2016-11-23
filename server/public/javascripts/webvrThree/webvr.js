@@ -1,9 +1,11 @@
 /**
  * @author mrdoob / http://mrdoob.com
+ * @revisedBy hanystudy / https://github.com/hanystudy
+ *
  * Based on @tojiro's vr-samples-utils.js
  */
 
-var WEBVR = {
+window.WEBVR = {
 
 	isLatestAvailable: function () {
 

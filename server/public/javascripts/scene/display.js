@@ -1,4 +1,6 @@
 export default class Display {
+  THREE = window.THREE || {};
+
   constructor(texture, width = 576, height = 360) {
     this.width = width
     this.height = height

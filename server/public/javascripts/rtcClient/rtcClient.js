@@ -1,6 +1,6 @@
-var pc2 = null
-var socket = io(location.origin)
-var webrtc = []
+var socket = require('socket.io-client')(location.origin);
+var pc2 = null;
+var webrtc = [];
 var remoteVideos = [
   document.createElement('video'),
   document.createElement('video'),

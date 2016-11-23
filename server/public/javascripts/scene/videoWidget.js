@@ -4,6 +4,8 @@ const SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
 const VIEW_ANGLE = 75, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 10000;
 
 export default class VideoWidget extends Widget {
+  THREE = window.THREE || {};
+  
   constructor(video, width, height) {
     super()
 

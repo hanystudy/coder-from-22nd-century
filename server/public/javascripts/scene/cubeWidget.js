@@ -1,6 +1,8 @@
 import Widget from './widget'
 
 export default class CubeWidget extends Widget {
+  THREE = window.THREE || {};
+
   constructor() {
     super()
 

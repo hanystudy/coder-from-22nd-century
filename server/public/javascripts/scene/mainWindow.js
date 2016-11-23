@@ -2,6 +2,8 @@ import Widget from './widget'
 import Display from './display'
 import VideoDisplay from './videoDisplay'
 import SurfaceDisplay from './surfaceDisplay'
+require('../helpers/THREEx.FullScreen')
+require('../helpers/THREEx.WindowResize')
 const DISPLAY_WIDTH = 960, DISPLAY_HEIGHT = 600, DISTANCE = 280, GAP = 1
 const DISPLAY_POSITIONS = [
   [0, 0, -600],
@@ -9,6 +11,9 @@ const DISPLAY_POSITIONS = [
 ]
 
 export default class MainWindow extends Widget {
+  THREE = window.THREE || {};
+  THREEx = window.THREEx || {};
+
   constructor(videos, width, height) {
     super()
 

@@ -1,8 +1,12 @@
-import remoteVideos from './remoteVideos'
-import Widget from './webgl/widget'
-import CubeWidget from './webgl/cubeWidget'
-import VideoWidget from './webgl/videoWidget'
-import MainWindow from './webgl/mainWindow'
+window.THREE = require('three')
+require('./webvr/webvr-polyfill-init')
+require('./webvrThree/vreffect')
+require('./webvrThree/vrcontrol')
+require('./webvrThree/webvr')
+require('./controls/centerControls')
+
+import remoteVideos from './rtcClient/rtcClient'
+import MainWindow from './scene/mainWindow'
 
 let mainWindow = new MainWindow(remoteVideos, window.innerWidth, window.innerHeight)
 let controls = new THREE.VRControls(mainWindow.camera)

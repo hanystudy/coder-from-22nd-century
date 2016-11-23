@@ -4,6 +4,7 @@ const SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
 const VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 10000;
 
 export default class Widget {
+  THREE = window.THREE || {}
   constructor() {
     this.renderer = this.initRenderer()
 

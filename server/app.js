@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 
 var app = express();
-var socket = require('./socketio');
+var rtcServer = require('./middlewares/rtcServer');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -48,6 +48,6 @@ var server = app.listen(port, function () {
   console.log('Updated : Server listening at port %d', port);
 });
 
-socket(server);
+rtcServer(server);
 
 module.exports = app;

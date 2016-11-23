@@ -1,7 +1,10 @@
 /**
  * @author dmarcos / https://github.com/dmarcos
  * @author mrdoob / http://mrdoob.com
+ * @revisedBy hanystudy / https://github.com/hanystudy
  */
+
+var THREE = window.THREE || {};
 
 THREE.VRControls = function ( object, onError ) {
 

@@ -1,6 +1,7 @@
 /**
  * @author dmarcos / https://github.com/dmarcos
  * @author mrdoob / http://mrdoob.com
+ * @revisedBy hanystudy / https://github.com/hanystudy
  *
  * WebVR Spec: http://mozvr.github.io/webvr-spec/webvr.html
  *
@@ -8,6 +9,8 @@
  * Chromium: https://webvr.info/get-chrome
  *
  */
+
+var THREE = window.THREE || {};
 
 THREE.VREffect = function( renderer, onError ) {
 
