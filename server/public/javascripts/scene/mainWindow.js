@@ -1,6 +1,4 @@
 import Widget from './widget'
-import Display from './display'
-import VideoDisplay from './videoDisplay'
 import SurfaceDisplay from './surfaceDisplay'
 require('../helpers/THREEx.FullScreen')
 require('../helpers/THREEx.WindowResize')
@@ -32,8 +30,6 @@ export default class MainWindow extends Widget {
     this.scene.add(this.camera)
 
     // this.scene.add(new THREE.AxisHelper(50))
-
-    this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement)
 
     THREEx.WindowResize(this.renderer, this.camera);
     THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
