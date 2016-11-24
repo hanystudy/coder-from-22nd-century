@@ -1,7 +1,6 @@
 import Widget from './widget'
 import SurfaceDisplay from './surfaceDisplay'
 
-require('../helpers/THREEx.FullScreen')
 require('../helpers/THREEx.WindowResize')
 
 const DISPLAY_WIDTH = 960, DISPLAY_HEIGHT = 600, DISTANCE = 280, GAP = 1
@@ -29,7 +28,6 @@ export default class MainWindow extends Widget {
     // this.scene.add(new THREE.AxisHelper(50))
 
     THREEx.WindowResize(this.renderer, this.camera);
-    THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
 
     this.displays = this.createDisplayGroup()
   }
