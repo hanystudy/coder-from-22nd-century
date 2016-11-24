@@ -3,7 +3,6 @@ require('./webvr/webvr-polyfill-init')
 require('./webvrThree/vreffect')
 require('./webvrThree/vrcontrol')
 require('./webvrThree/webvr')
-require('./controls/centerControls')
 
 import remoteVideos from './rtcClient/rtcClient'
 import MainWindow from './scene/mainWindow'
