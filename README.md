@@ -72,4 +72,24 @@ three.js
 
 ~~Unity3D~~
 
+## Roadmap
+
+Native WebVR support
+
+Elastic apps showing
+
+Control switch for apps
+
+Network tuning
+
+Display tuning
+
+Native WebVR apps support
+
+Peripherals for WebVR apps (like bluetooth keyboards, earphones, daydream controllers, etc)
+
+Well supported peripherals summary
+
+Support for non-coders
+
 #### License [CC0 1.0 (Public Domain)](LICENSE.md)
